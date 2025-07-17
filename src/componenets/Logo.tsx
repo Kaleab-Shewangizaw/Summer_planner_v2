@@ -1,5 +1,5 @@
 "use client";
-import { motion, scale } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function Logo() {
   return (
