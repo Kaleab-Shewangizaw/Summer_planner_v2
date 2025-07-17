@@ -5,7 +5,7 @@ export default function FeaturesSection() {
       <div className="flex md:flex-row flex-col  gap-5">
         <div className="w-full md:w-3/5">
           {/* left */}
-          <h1 className="text-5xl !h-[100px] w-[80%]  ">
+          <h1 className="text-4xl md:text-5xl  !h-[100px] lg:w-7/8  ">
             Boost your team&apos;s productivuty{" "}
           </h1>
           <div className="border rounded-md border-[#1e3556bf] p-3 mt-5 bg-[#140f369e]">
@@ -29,7 +29,7 @@ export default function FeaturesSection() {
         </div>
         <div className="w-full md:w-2/5 flex flex-col ">
           {/* right */}
-          <p className="text-left w-4/5 ml-auto  mb-11 !h-[100px] font-bold text-gray-300">
+          <p className="text-left  ml-auto  mb-11 !h-[100px] font-bold text-gray-300">
             Effortlessly organize your tasks with intiutive proiritization
             tools, ensuring you focus on what truely matters.
           </p>
