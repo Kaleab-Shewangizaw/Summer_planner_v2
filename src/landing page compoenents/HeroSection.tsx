@@ -2,7 +2,7 @@ import Button from "@/componenets/Button";
 
 export default function HeroSection() {
   return (
-    <div className="mx-auto  mt-30 ">
+    <div className="mx-auto  mt-25 ">
       <div className="text-center font-semibold text-7xl">
         <h1>
           <em className="!font-extralight font-serif">Organize</em> your work,
