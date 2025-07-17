@@ -4,7 +4,7 @@ import Button from "@/componenets/Button";
 
 export default function LandingNavbar() {
   return (
-    <div className=" md:w-[90%] lg:w-[90%] sticky top-5 z-100 min-w-fit w-full mx-auto  flex p-2 px-4 gap-4 rounded-xl items-center justify-between border-gray-600">
+    <div className=" md:w-[90%] lg:w-[90%] mt-5 z-100 min-w-fit w-full mx-auto  flex p-2 px-4 gap-4 rounded-xl items-center justify-between border-gray-600">
       <div className="w-1/3 ">
         <Logo />
       </div>
