@@ -10,16 +10,16 @@ export default function FeaturesSection() {
           </h1>
           <div className="border rounded-md border-[#1e3556bf] p-3 mt-5 bg-[#140f369e]">
             <h1 className="text-xl mb-2 font-bold">Improved commuinication</h1>
-            <p className="w-[70%]">
+            <p className="w-[70%] font-semibold text-gray-400">
               Team members can share tasks, updates, and files within the app,
               keeping everyone on the same page.
             </p>
             <div className="w-[70%] h-20 bg-black/30 my-3 mx-auto"></div>
           </div>
-          <div className="border rounded-md border-[#1e3556bf] p-3 px-4 mt-4 flex items-center justify-between gap-5 bg-[#140f369e]">
-            <div className="w-2/3">
-              <h1 className="text-xl mb-2 font-bold">Reduced Workload</h1>
-              <p>
+          <div className="border rounded-md border-[#1e3556bf] p-3 px-4 mt-4 flex items-start justify-between  bg-[#140f369e]">
+            <div className="w-2/3 ">
+              <h1 className="text-xl mb-2 font-bold ">Reduced Workload</h1>
+              <p className="font-semibold text-gray-400">
                 Breaking down large projects into smaller, manageable tasks
                 feels less daunting and promotes steady progress.
               </p>
@@ -29,7 +29,7 @@ export default function FeaturesSection() {
         </div>
         <div className="w-full md:w-2/5 flex flex-col ">
           {/* right */}
-          <p className="text-left  ml-auto  mb-11 !h-[100px] font-bold text-gray-300">
+          <p className="text-left  ml-auto  mb-11 !h-[100px] font-bold text-gray-500">
             Effortlessly organize your tasks with intiutive proiritization
             tools, ensuring you focus on what truely matters.
           </p>
