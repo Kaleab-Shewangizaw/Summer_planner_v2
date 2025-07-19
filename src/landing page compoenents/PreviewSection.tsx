@@ -18,10 +18,10 @@ export default function PreviewSection() {
             demo goes here
           </div>
         </div>
-        <div className="w-95 md:w-160 lg:w-190  h-3 md:h-5 bg-[#0c0c0ce7] border-t border-l-1 border-l-gray-600 border-r-1 border-r-gray-600 border-gray-800 rounded-b-2xl rounded-t-sm overflow-clip flex justify-between">
+        <div className=" w-95 md:w-160 lg:w-190  h-3 md:h-5 bg-[#0c0c0ce7] border-t border-l-1 border-l-gray-600 border-r-1 border-r-gray-600 border-gray-800 rounded-b-2xl rounded-t-sm overflow-clip flex justify-between">
           {/* keyboard */}
           <div className=" h-full bg-gradient-to-r shadow-[0px_0px_10px_40px_#1f1f1f] to-gray-900 from-gray-500"></div>
-          <div className="w-30 rounded-xl bg-gray-500 h-2 "></div>
+          <div className="w-40 rounded-xl bg-gray-500 h-2 mt-[-3px]"></div>
           <div className=" h-full shadow-[0px_0px_10px_40px_#1f1f1f]"></div>
         </div>
       </div>
