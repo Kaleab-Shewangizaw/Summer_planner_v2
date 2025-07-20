@@ -23,6 +23,7 @@ import {
 import { PiNewspaper, PiNewspaperFill } from "react-icons/pi";
 import { RiTaskFill, RiTaskLine } from "react-icons/ri";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const icons = [
   {
@@ -70,7 +71,8 @@ const icons2 = [
 ];
 
 export default function Sidebar() {
-  const location: string = window.location.pathname.split("/")[1];
+  const location: string = usePathname().split("/")[1];
+  console.log(location);
   const [show, setShow] = useState(true);
 
   return (
