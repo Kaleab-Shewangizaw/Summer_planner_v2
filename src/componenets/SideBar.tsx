@@ -81,7 +81,7 @@ export default function Sidebar() {
           const isHere = location === icon.name;
           const Icon = isHere ? icon.icon2 : icon.icon1;
           return (
-            <Link key={i} href={icon.name}>
+            <Link key={i} href={`/${icon.name}`}>
               <div
                 className={`flex items-center gap-2 mt-5 cursor-pointer transition-all duration-150  ${
                   isHere ? "text-blue-500" : "text-gray-300 hover:text-blue-200"
