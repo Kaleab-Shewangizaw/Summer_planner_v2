@@ -3,7 +3,7 @@ import Logo from "./Logo";
 
 export default function Navbar() {
   return (
-    <div className="w-full  py-1 relative flex items-center justify-between px-5 bg-blue-600/10">
+    <div className="w-full  py-1 relative flex items-center justify-between px-5 bg-blue-600/10 mb-1">
       <div className=" w-0  rounded-full shadow-[0px_0px_300px_100px_#1447e6] absolute bottom-30  right-70 z-[-100] "></div>
       <div className=" scale-90">
         <Logo />

@@ -1,11 +1,11 @@
 export default function PreviewSection() {
   return (
     <div className="lg:w-[75%] md:w-[90%] mx-auto my-20   h-150">
-      <div className="flex items-end justify-center">
-        <span className="font-bold text-5xl md:text-7xl h-25 w-25 md:h-45 md:w-45 rounded-md bg-red-500  p-2 pb-0 rotate-z-15 inline-flex items-end justify-center cursor-pointer">
+      <div className="flex items-end justify-center hover:-rotate-z-6 trasnition-all duration-150">
+        <span className="font-bold text-5xl md:text-7xl h-25 w-25 md:h-45 md:w-45 rounded-md bg-red-500  p-2 pb-0 rotate-z-3 inline-flex items-end justify-center cursor-default">
           SP
         </span>
-        <span className="text-5xl md:text-7xl font-bold rotate-z-3">
+        <span className="text-5xl md:text-7xl font-bold rotate-z-3 cursor-default ">
           Summer Planner
         </span>
       </div>

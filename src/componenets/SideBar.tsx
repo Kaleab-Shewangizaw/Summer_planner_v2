@@ -72,11 +72,10 @@ const icons2 = [
 
 export default function Sidebar() {
   const location: string = usePathname().split("/")[1];
-  console.log(location);
   const [show, setShow] = useState(true);
 
   return (
-    <div className=" bg-blue-700/10 mt-1 mr-1 rounded-sm w-fit px-3 relative">
+    <div className=" bg-blue-900/10 h-full mr-1 rounded-sm w-fit px-3 relative font-bold">
       <div className="mt-40">
         {icons.map((icon, i) => {
           const isHere = location === icon.name;
@@ -85,7 +84,7 @@ export default function Sidebar() {
             <Link key={i} href={icon.name}>
               <div
                 className={`flex items-center gap-2 mt-5 cursor-pointer transition-all duration-150  ${
-                  isHere ? "text-blue-500" : "text-gray-400 hover:text-blue-200"
+                  isHere ? "text-blue-500" : "text-gray-300 hover:text-blue-200"
                 }`}
               >
                 <Icon className="text-2xl" />
@@ -117,7 +116,7 @@ export default function Sidebar() {
             <Link key={i} href={icon.name}>
               <div
                 className={`flex items-center gap-2 mt-5 cursor-pointer transition-all duration-150  ${
-                  isHere ? "text-blue-500" : "text-gray-400 hover:text-blue-200"
+                  isHere ? "text-blue-500" : "text-gray-300 hover:text-blue-300"
                 }`}
               >
                 <Icon className="text-2xl" />
@@ -140,7 +139,6 @@ export default function Sidebar() {
           );
         })}
       </div>
-
       <div
         className="rounded-full p-1 cursor-pinter bg-black/30 absolute right-2  top-2 cursor-pointer text-gray-300"
         onClick={() => {

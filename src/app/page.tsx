@@ -10,7 +10,7 @@ import PricingSection from "@/landing page compoenents/PricingSection";
 
 export default function Home() {
   return (
-    <div className="w-full relative px-2">
+    <div className="w-full relative px-2 h-screen max-h-screen overflow-y-auto removeScrollBar">
       <LandingNavbar />
       <HeroSection />
       <ChosenBySection />
