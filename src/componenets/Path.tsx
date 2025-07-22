@@ -9,7 +9,7 @@ export default function Path() {
   const path = realPath.split("/");
   console.log(path);
   return (
-    <div className=" w-full flex gap-10 text-md text-gray-500">
+    <div className=" w-full flex gap-10 text-md text-gray-500 py-2 border-b">
       <BsArrowLeft
         className="text-2xl cursor-pointer hover:text-white"
         onClick={() => {}}
@@ -22,7 +22,7 @@ export default function Path() {
               /
               <Link
                 href={`/${path}`}
-                className="cursor-pointer hover:text-gray-300 mx-1"
+                className="cursor-pointer hover:text-gray-300 mx-1 "
               >
                 {p}
               </Link>
