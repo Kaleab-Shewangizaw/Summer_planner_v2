@@ -1,30 +1,44 @@
 "use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 
 export default function Path() {
+  const router = useRouter();
   const realPath = usePathname();
-  const path = realPath.split("/");
-  console.log(path);
+  const [pathSegments, setPathSegments] = useState<string[]>([]);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+    if (realPath) {
+      const segments = realPath
+        .split("/")
+        .filter(Boolean)
+        .map((p) => decodeURIComponent(p));
+      setPathSegments(segments);
+    }
+  }, [realPath]);
+
+  if (!hasMounted) return null;
+
   return (
-    <div className=" w-full flex gap-10 text-md text-gray-500 py-2 border-b">
+    <div className="w-full flex gap-10 text-md text-gray-500 py-2 border-b">
       <BsArrowLeft
         className="text-2xl cursor-pointer hover:text-white"
-        onClick={() => {}}
-      />{" "}
+        onClick={() => router.back()}
+      />
       <div>
-        {path.map((path) => {
-          const p = path.length > 0 && path.split("%20").join(" ");
+        {pathSegments.map((segment, i) => {
+          const href = "/" + pathSegments.slice(0, i + 1).join("/");
+
           return (
-            <span key={path}>
-              /
-              <Link
-                href={`/${path}`}
-                className="cursor-pointer hover:text-gray-300 mx-1 "
-              >
-                {p}
+            <span key={href}>
+              {i > 0 && <span className="mx-1">/</span>}
+              <Link href={href} className="hover:text-gray-300 mx-1">
+                {segment}
               </Link>
             </span>
           );

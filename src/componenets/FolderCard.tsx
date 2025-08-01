@@ -5,6 +5,7 @@ import { BiFolder } from "react-icons/bi";
 import { SlOptionsVertical } from "react-icons/sl";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { PiX } from "react-icons/pi";
 
 export default function FolderCard({ name }: { name: string }) {
   let na = "";
@@ -18,13 +19,13 @@ export default function FolderCard({ name }: { name: string }) {
   const [showOptions, setShowOptions] = useState(false);
   return (
     <div className="relative group">
-      <div className="absolute top-2 right-2 hidden group-hover:block z-100 p-2 rounded-full hover:bg-black/35 cursor-pointer ">
-        <SlOptionsVertical
-          className=" "
-          onClick={() => {
-            setShowOptions(!showOptions);
-          }}
-        />
+      <div
+        className="absolute top-2 right-2 hidden group-hover:block z-100 p-2 rounded-full hover:bg-black/35 cursor-pointer "
+        onClick={() => {
+          setShowOptions(!showOptions);
+        }}
+      >
+        {showOptions ? <PiX /> : <SlOptionsVertical className="" />}
       </div>
       {showOptions && (
         <motion.div className="overflow-hidden border flex flex-wrap flex-col w-30 rounded-sm border-blue-400/20 bg-[#131e3c] z-100 absolute top-8 right-1">
