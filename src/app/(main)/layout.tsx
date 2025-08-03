@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <div className="h-screen  max-h-screen  flex flex-col">
       <Navbar />
-      <div className="flex h-[93%] max-h-full  ">
+      <div className="flex h-[93%] max-h-full  w-screen ">
         <Sidebar />
         {children}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Column } from "@/utils/types";
+import { Column, Id, Task } from "@/utils/types";
 
 import { useMemo, useState } from "react";
 import { DragEndEvent, DragOverlay } from "@dnd-kit/core";
@@ -13,6 +13,61 @@ import { createPortal } from "react-dom";
 export default function ProjectPage() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  // const sensors = useSensors();
+
+  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+
+  return (
+    <div className="h-full w-full overflow-hidden px-3 pt-1 text-sm ">
+      <DndContext onDragStart={dragStart} onDragEnd={dragEnd}>
+        <div className=" w-full overflow-auto removeScrollBar h-full  flex flex-col">
+          <div className="flex w-full items-center justify-between mb-1">
+            <h1 className="text-lg font-semibold">Project Board</h1>
+            <button
+              onClick={createNewColumn}
+              className="mt-1 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 min-w-fit"
+            >
+              + Add Column
+            </button>
+          </div>
+          <div className="flex gap-2 justify-start overflow-auto  py-2 pr-100 flex-1 text-sm w-full removeScrollBar px-2 items-start">
+            <SortableContext items={columnsId}>
+              {columns.map((column) => (
+                <ColumnComponenet
+                  key={column.id}
+                  column={column}
+                  deleteColumn={deleteColumn}
+                  updateColumn={updateColumn}
+                  createTask={createTask}
+                  tasks={tasks.filter((task) => task.columnId === column.id)}
+                />
+              ))}
+            </SortableContext>
+          </div>
+
+          {createPortal(
+            <DragOverlay>
+              {activeColumn && (
+                <ColumnComponenet
+                  column={activeColumn}
+                  updateColumn={updateColumn}
+                  deleteColumn={deleteColumn}
+                  createTask={createTask}
+                  tasks={tasks.filter(
+                    (task) => task.columnId === activeColumn.id
+                  )}
+                />
+              )}
+            </DragOverlay>,
+            document.body
+          )}
+        </div>
+      </DndContext>
+    </div>
+  );
 
   function generateId() {
     return Math.floor(Math.random() * 10001);
@@ -24,14 +79,39 @@ export default function ProjectPage() {
     };
     setColumns([...columns, columnToAdd]);
   }
+
   function deleteColumn(id: number) {
     setColumns(columns.filter((column) => column.id !== id));
   }
+
+  function updateColumn(columnId: Id, title: string) {
+    const newCols = columns.map((col) => {
+      if (col.id !== columnId) return col;
+      return { ...col, title };
+    });
+    setColumns(newCols);
+  }
+
+  function createTask(id: number) {
+    const newTask: Task = {
+      id: generateId(),
+      columnId: id,
+      content: `task ${tasks.length + 1}`,
+    };
+
+    setTasks([...tasks, newTask]);
+  }
+
   function dragStart(e: DragStartEvent) {
     if (e.active.data.current?.type === "Column") {
       setActiveColumn(e.active.data.current.column);
     }
+
+    if (e.active.data.current?.type === "Task") {
+      setActiveTask(e.active.data.current.task);
+    }
   }
+
   function dragEnd(e: DragEndEvent) {
     const { active, over } = e;
     if (!over) return;
@@ -49,46 +129,4 @@ export default function ProjectPage() {
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
   }
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
-
-  return (
-    <div className="h-full w-full overflow-auto removeScrollBar ">
-      <DndContext onDragStart={dragStart} onDragEnd={dragEnd}>
-        <div className="py-5 border-gray-200">
-          <h1 className="text-lg font-semibold">Project Columns</h1>
-          <div className="flex gap-5 justify-start px-auto flex-wrap px-2">
-            <SortableContext items={columnsId}>
-              {columns.map((column) => (
-                <ColumnComponenet
-                  key={column.id}
-                  column={column}
-                  deleteColumn={deleteColumn}
-                />
-              ))}
-            </SortableContext>
-          </div>
-
-          <button
-            onClick={createNewColumn}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Add Column
-          </button>
-          {createPortal(
-            <DragOverlay>
-              {activeColumn && (
-                <div className="opacity-80">
-                  <ColumnComponenet
-                    column={activeColumn}
-                    deleteColumn={deleteColumn}
-                  />
-                </div>
-              )}
-            </DragOverlay>,
-            document.body
-          )}
-        </div>
-      </DndContext>
-    </div>
-  );
 }

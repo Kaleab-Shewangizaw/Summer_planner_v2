@@ -25,7 +25,7 @@ export default function Path() {
   if (!hasMounted) return null;
 
   return (
-    <div className="w-full flex gap-10 text-md text-gray-500 py-2 border-b">
+    <div className="w-full flex gap-10 text-md text-gray-500 py-1 items-center  text-sm">
       <BsArrowLeft
         className="text-2xl cursor-pointer hover:text-white"
         onClick={() => router.back()}

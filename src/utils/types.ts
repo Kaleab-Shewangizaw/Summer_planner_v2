@@ -1,3 +1,5 @@
+export type Id = number;
+
 export interface Column {
   id: number;
   title: string;

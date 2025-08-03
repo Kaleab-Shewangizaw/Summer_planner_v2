@@ -3,13 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Task } from "@/utils/types";
 import { useState } from "react";
 
-export default function TaskComponent({
-  task,
-  deleteTask,
-}: {
-  task: Task;
-  deleteTask: (id: number) => void;
-}) {
+export default function TaskComponent({ task }: { task: Task }) {
   const [editMode, setEditMode] = useState(false);
   const [taskContent, setTaskContent] = useState(task.content);
 
@@ -29,7 +23,7 @@ export default function TaskComponent({
       <div
         ref={setNodeRef}
         style={style}
-        className="opacity-30 bg-gray-200 p-2 h-[100px] min-h-[100px] rounded-md border-2 border-blue-500 cursor-grab relative"
+        className="bg-blue-900/40 p-3 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow"
       />
     );
   }
@@ -37,13 +31,15 @@ export default function TaskComponent({
   return (
     <div
       ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       style={style}
-      className="bg-white p-3 rounded-md shadow-sm border border-gray-200 mb-2 cursor-grab hover:shadow-md transition-shadow"
+      className="bg-blue-900/40 p-3 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow"
       onClick={() => setEditMode(true)}
     >
       {editMode ? (
         <input
-          className="bg-gray-100 focus:bg-white border rounded outline-none px-2 w-full"
+          className="  border rounded outline-none px-2 w-full"
           value={taskContent}
           onChange={(e) => setTaskContent(e.target.value)}
           autoFocus
@@ -62,10 +58,7 @@ export default function TaskComponent({
         <div className="flex justify-between items-center">
           <span>{taskContent}</span>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteTask(task.id);
-            }}
+            onClick={() => {}}
             className="text-gray-400 hover:text-red-500"
           >
             ×
