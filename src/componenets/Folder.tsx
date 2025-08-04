@@ -9,18 +9,18 @@ import { BsHash } from "react-icons/bs";
 import { CgMoreVertical } from "react-icons/cg";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
-export default function Folder({
+export default function SideFolderComponenet({
   name,
   id,
   projects,
 }: {
   name: string;
-  id: string;
+  id: number;
   projects:
     | []
     | {
         name: string;
-        id: string;
+        id: number;
       }[];
 }) {
   const pathname = usePathname();
@@ -113,8 +113,8 @@ export default function Folder({
           onClick={() => setShow(true)}
         >
           <h1
-            className={`text-sm font-medium ${
-              path === name ? "text-white font-bold" : ""
+            className={`text-sm  ${
+              path === name ? "text-gray-100 font-bold" : ""
             }`}
           >
             {name}

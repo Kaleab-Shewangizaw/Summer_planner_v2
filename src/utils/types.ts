@@ -10,3 +10,15 @@ export interface Task {
   columnId: number;
   content: string;
 }
+
+export interface Project {
+  id: number;
+  name: string;
+  folderId: number;
+}
+
+export interface Folder {
+  id: number;
+  name: string;
+  projects: Project[];
+}
