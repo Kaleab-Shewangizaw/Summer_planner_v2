@@ -2,8 +2,15 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Task } from "@/utils/types";
 import { useState } from "react";
+import { GrDrag } from "react-icons/gr";
 
-export default function TaskComponent({ task }: { task: Task }) {
+export default function TaskComponent({
+  task,
+  deleteTask,
+}: {
+  task: Task;
+  deleteTask: (id: number) => void;
+}) {
   const [editMode, setEditMode] = useState(false);
   const [taskContent, setTaskContent] = useState(task.content);
 
@@ -23,7 +30,7 @@ export default function TaskComponent({ task }: { task: Task }) {
       <div
         ref={setNodeRef}
         style={style}
-        className="bg-blue-900/40 p-3 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow"
+        className="bg-blue-900/40 p-5 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow"
       />
     );
   }
@@ -31,12 +38,16 @@ export default function TaskComponent({ task }: { task: Task }) {
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={style}
-      className="bg-blue-900/40 p-3 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow"
+      className="bg-blue-900/40 p-3 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow relative"
       onClick={() => setEditMode(true)}
     >
+      <GrDrag
+        {...attributes}
+        {...listeners}
+        className="text-2xl focus:outline-none text-gray-500 absolute top-4 cursor-grabbing left-2"
+      />
+
       {editMode ? (
         <input
           className="  border rounded outline-none px-2 w-full"
@@ -58,7 +69,9 @@ export default function TaskComponent({ task }: { task: Task }) {
         <div className="flex justify-between items-center">
           <span>{taskContent}</span>
           <button
-            onClick={() => {}}
+            onClick={() => {
+              deleteTask(task.id);
+            }}
             className="text-gray-400 hover:text-red-500"
           >
             ×

@@ -3,22 +3,25 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { Column, Task } from "@/utils/types";
 import { CSS } from "@dnd-kit/utilities";
-import { BiPlus, BiTrash } from "react-icons/bi";
+
 import { GrDrag } from "react-icons/gr";
 import { SetStateAction, useMemo, useRef, useState } from "react";
 import TaskComponent from "./TaskComponent";
+import { BiTrash } from "react-icons/bi";
 
 export default function ColumnComponenet({
   column,
   deleteColumn,
   createTask,
   updateColumn,
+  deleteTask,
   tasks,
 }: {
   column: Column;
   deleteColumn: (id: number) => void;
   createTask: (id: number) => void;
   updateColumn: (columnId: number, title: string) => void;
+  deleteTask: (id: number) => void;
   tasks: Task[];
 }) {
   const [title, setTitle] = useState(column.title);
@@ -107,7 +110,7 @@ export default function ColumnComponenet({
       <div className="flex flex-col flex-1 overflow-auto removeScrollBar px-2 mt-3 pb-100">
         <SortableContext items={taskIds}>
           {tasks.map((task) => (
-            <TaskComponent key={task.id} task={task} />
+            <TaskComponent key={task.id} task={task} deleteTask={deleteTask} />
           ))}
         </SortableContext>
       </div>

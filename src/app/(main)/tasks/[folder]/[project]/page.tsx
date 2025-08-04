@@ -9,6 +9,7 @@ import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 
 import ColumnComponenet from "./Column";
 import { createPortal } from "react-dom";
+import TaskComponent from "./TaskComponent";
 
 export default function ProjectPage() {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -22,7 +23,11 @@ export default function ProjectPage() {
 
   return (
     <div className="h-full w-full overflow-hidden px-3 pt-1 text-sm ">
-      <DndContext onDragStart={dragStart} onDragEnd={dragEnd}>
+      <DndContext
+        onDragStart={dragStart}
+        onDragEnd={dragEnd}
+        onDragOver={ondragOver}
+      >
         <div className=" w-full overflow-auto removeScrollBar h-full  flex flex-col">
           <div className="flex w-full items-center justify-between mb-1">
             <h1 className="text-lg font-semibold">Project Board</h1>
@@ -41,6 +46,7 @@ export default function ProjectPage() {
                   column={column}
                   deleteColumn={deleteColumn}
                   updateColumn={updateColumn}
+                  deleteTask={deleteTask}
                   createTask={createTask}
                   tasks={tasks.filter((task) => task.columnId === column.id)}
                 />
@@ -56,10 +62,14 @@ export default function ProjectPage() {
                   updateColumn={updateColumn}
                   deleteColumn={deleteColumn}
                   createTask={createTask}
+                  deleteTask={deleteTask}
                   tasks={tasks.filter(
                     (task) => task.columnId === activeColumn.id
                   )}
                 />
+              )}
+              {activeTask && (
+                <TaskComponent task={activeTask} deleteTask={deleteTask} />
               )}
             </DragOverlay>,
             document.body
@@ -82,6 +92,7 @@ export default function ProjectPage() {
 
   function deleteColumn(id: number) {
     setColumns(columns.filter((column) => column.id !== id));
+    setTasks(tasks.filter((task) => task.columnId !== id));
   }
 
   function updateColumn(columnId: Id, title: string) {
@@ -102,6 +113,12 @@ export default function ProjectPage() {
     setTasks([...tasks, newTask]);
   }
 
+  function deleteTask(id: number) {
+    setTasks(tasks.filter((task) => task.id !== id));
+  }
+
+  // Drag and drop handlers
+
   function dragStart(e: DragStartEvent) {
     if (e.active.data.current?.type === "Column") {
       setActiveColumn(e.active.data.current.column);
@@ -113,6 +130,8 @@ export default function ProjectPage() {
   }
 
   function dragEnd(e: DragEndEvent) {
+    setActiveColumn(null);
+    setActiveTask(null);
     const { active, over } = e;
     if (!over) return;
     const activeColumnId = active.id;
@@ -128,5 +147,58 @@ export default function ProjectPage() {
       );
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
+  }
+  function ondragOver(e: DragEndEvent) {
+    const { active, over } = e;
+    if (!over || !active) return;
+
+    const activeType = active.data.current?.type;
+    const overType = over.data.current?.type;
+
+    const activeTaskId = active.id;
+
+    // Only proceed if dragging a task
+    if (activeType !== "Task") return;
+
+    // Dropped on another task
+    if (overType === "Task") {
+      const overTaskId = over.id;
+
+      setTasks((tasks) => {
+        const activeTaskIndex = tasks.findIndex(
+          (task) => task.id === activeTaskId
+        );
+        const overTaskIndex = tasks.findIndex((task) => task.id === overTaskId);
+
+        if (activeTaskIndex === -1 || overTaskIndex === -1) return tasks;
+
+        const updatedTasks = [...tasks];
+
+        // Move active task to over task position and update column
+        updatedTasks[activeTaskIndex].columnId =
+          updatedTasks[overTaskIndex].columnId;
+
+        return arrayMove(updatedTasks, activeTaskIndex, overTaskIndex);
+      });
+
+      return;
+    }
+
+    // Dropped on an empty column
+    if (overType === "Column") {
+      const columnId = over.id;
+
+      setTasks((tasks) => {
+        const activeTaskIndex = tasks.findIndex(
+          (task) => task.id === activeTaskId
+        );
+        if (activeTaskIndex === -1) return tasks;
+
+        const updatedTasks = [...tasks];
+        updatedTasks[activeTaskIndex].columnId = columnId;
+
+        return updatedTasks;
+      });
+    }
   }
 }
