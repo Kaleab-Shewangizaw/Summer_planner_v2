@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { BiFolder } from "react-icons/bi";
 import { BsHash } from "react-icons/bs";
 import { CgMoreVertical } from "react-icons/cg";
@@ -13,9 +13,17 @@ export default function SideFolderComponenet({
   name,
   id,
   projects,
+  deleteFolder,
+  addProject,
+  renameFolder,
+  emptyFolder,
 }: {
   name: string;
   id: number;
+  deleteFolder: (id: number) => void;
+  addProject: (id: number) => void;
+  renameFolder: (id: number, name: string) => void;
+  emptyFolder: (id: number) => void;
   projects:
     | []
     | {
@@ -29,7 +37,32 @@ export default function SideFolderComponenet({
   const [hasMounted, setHasMounted] = useState(false);
   const [show, setShow] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [editFolderName, setEditFolderName] = useState(false);
+  const [newName, setNewName] = useState(name);
   const optionsRef = useRef<HTMLDivElement>(null);
+
+  const handleDoubleClick = () => {
+    setEditFolderName(true);
+    if (showOptions) {
+      setShowOptions(false);
+    }
+  };
+
+  const handleBlur = () => {
+    setEditFolderName(false);
+    if (!newName.trim()) setNewName(name);
+  };
+
+  const handleChange = (e: { target: { value: SetStateAction<string> } }) => {
+    setNewName(e.target.value);
+    renameFolder(id, name);
+  };
+
+  const handleKeyDown = (e: { key: string }) => {
+    if (e.key === "Enter") {
+      handleBlur();
+    }
+  };
 
   // Handle pathname update
   useEffect(() => {
@@ -41,7 +74,6 @@ export default function SideFolderComponenet({
     }
   }, [pathname]);
 
-  // Hide options menu on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -76,19 +108,36 @@ export default function SideFolderComponenet({
             transition={{ duration: 0.15 }}
             className="absolute top-10 right-3 z-50 w-40 rounded-md bg-[#131e3c] border border-blue-400/20 shadow-lg p-1 text-sm"
           >
-            {[
-              "+ New project",
-              "Rename folder",
-              "Empty folder",
-              "Delete folder",
-            ].map((action, i) => (
-              <button
-                key={i}
-                className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
-              >
-                {action}
-              </button>
-            ))}
+            <button
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              onClick={() => {
+                addProject(id);
+              }}
+            >
+              + New Project
+            </button>
+            <button
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              onClick={handleDoubleClick}
+            >
+              Rename folder
+            </button>
+            <button
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              onClick={() => {
+                emptyFolder(id);
+              }}
+            >
+              Empty folder
+            </button>
+            <button
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              onClick={() => {
+                deleteFolder(id);
+              }}
+            >
+              Delete Folder
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -96,9 +145,7 @@ export default function SideFolderComponenet({
       {/* Folder Header */}
       <div
         className="flex w-full items-center justify-between px-3 py-3 hover:bg-blue-800/20 group relative"
-        onDoubleClick={() => {
-          alert("Hello motherfucker");
-        }}
+        onDoubleClick={handleDoubleClick}
       >
         <div onClick={() => setShow(!show)} className="cursor-pointer p-1">
           {show ? <FaAngleUp /> : <FaAngleDown />}
@@ -106,25 +153,37 @@ export default function SideFolderComponenet({
         <div className="text-2xl px-2">
           <BiFolder />
         </div>
-
-        <Link
-          href={`/tasks/${name}`}
-          className="flex-1"
-          onClick={() => setShow(true)}
-        >
-          <h1
-            className={`text-sm  ${
-              path === name ? "text-gray-100 font-bold" : ""
-            }`}
+        {editFolderName ? (
+          <input
+            autoFocus
+            type="text"
+            value={newName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            className="w-[90%] px-2 py-1 border border-blue-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xl"
+          />
+        ) : (
+          <Link
+            href={`/tasks/${name}`}
+            className="flex-1"
+            onClick={() => setShow(true)}
           >
-            {name}
-          </h1>
-          {!show && (
-            <div className="text-gray-400 text-xs px-2">
-              {projects.length} {projects.length === 1 ? "project" : "projects"}
-            </div>
-          )}
-        </Link>
+            <h1
+              className={`text-sm  ${
+                path === name ? "text-gray-100 font-bold" : ""
+              }`}
+            >
+              {name}
+            </h1>
+            {!show && (
+              <div className="text-gray-400 text-xs px-2">
+                {projects.length}{" "}
+                {projects.length === 1 ? "project" : "projects"}
+              </div>
+            )}
+          </Link>
+        )}
 
         <div
           onClick={() => setShowOptions((prev) => !prev)}

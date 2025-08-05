@@ -1,7 +1,7 @@
 "use client";
 
 import SideFolderComponenet from "@/componenets/Folder";
-import { Folder } from "@/utils/types";
+import { Folder, Project } from "@/utils/types";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useState } from "react";
@@ -11,12 +11,13 @@ export default function TasksSidebar() {
   const [show, setShow] = useState(true);
   const [addingFolder, setAddingFolder] = useState(true);
   const [folders, setFolders] = useState<Folder[] | []>([]);
+  const [projects, setProjects] = useState<Project[] | []>([]);
   const [folderName, setFolderName] = useState("");
 
   return (
     <div className=" bg-blue-900/10 h-full rounded-sm w-fit  font-bold group">
       <div
-        className=" p-1 h-fit w-fit cursor-pinter  absolute  top-3 left-20   text-2xl cursor-pointer text-gray-100"
+        className=" p-1 h-fit w-fit cursor-pinter  absolute  top-3 left-20   text-2xl cursor-pointer text-gray-100 px-2 py-1 rounded-md bg-blue-900/50"
         onClick={() => {
           setShow(!show);
         }}
@@ -30,7 +31,7 @@ export default function TasksSidebar() {
       <AnimatePresence initial={false}>
         {show && (
           <motion.div
-            className="rounded-sm w-full min-w-fit p-5 px-1   flex-col  h-full max-h-[100%] hidden md:flex"
+            className="rounded-sm w-full min-w-fit p-5 px-1 overflow-hidden  flex-col  h-full max-h-[100%] hidden md:flex"
             key="content"
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "auto", opacity: 1 }}
@@ -45,7 +46,13 @@ export default function TasksSidebar() {
                       key={folder.id}
                       name={folder.name}
                       id={folder.id}
-                      projects={folder.projects}
+                      projects={projects.filter(
+                        (project) => project.folderId == folder.id
+                      )}
+                      deleteFolder={deleteFolder}
+                      emptyFolder={emptyFolder}
+                      renameFolder={renameFolder}
+                      addProject={addProject}
                     />
                   );
                 })
@@ -56,10 +63,16 @@ export default function TasksSidebar() {
                 <div className="w-full flex flex-col items-end mt-3">
                   <input
                     type="text"
-                    placeholder="Folder name"
-                    className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none"
+                    placeholder="New folder name"
+                    className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none placeholder:text-gray-600"
                     onChange={(e) => {
                       setFolderName(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        createFolder(folderName);
+                        setAddingFolder(false);
+                      }
                     }}
                   />
                   <button
@@ -103,5 +116,27 @@ export default function TasksSidebar() {
     };
 
     setFolders([...folders, newFolder]);
+  }
+
+  function deleteFolder(id: number) {
+    setFolders(folders.filter((folder) => folder.id != id));
+  }
+  function emptyFolder(id: number) {
+    const filteredProjects = projects?.filter(
+      (project) => project.folderId !== id
+    );
+    setProjects(filteredProjects);
+    return;
+  }
+  function renameFolder(id: number, name: string) {
+    const newFolders = folders.map((folder) => {
+      if (folder.id !== id) return folder;
+      return { ...folder, name };
+    });
+    setFolders(newFolders);
+    return;
+  }
+  function addProject(id: number) {
+    return;
   }
 }
