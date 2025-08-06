@@ -15,7 +15,7 @@ export default function TasksSidebar() {
   const [folderName, setFolderName] = useState("");
 
   return (
-    <div className=" bg-blue-900/10 h-full rounded-sm w-fit  font-bold group">
+    <div className=" bg-blue-900/10 h-full rounded-sm w-fit  group">
       <div
         className=" p-1 h-fit w-fit cursor-pinter  absolute  top-3 left-20   text-2xl cursor-pointer text-gray-100 px-2 py-1 rounded-md bg-blue-900/50"
         onClick={() => {
