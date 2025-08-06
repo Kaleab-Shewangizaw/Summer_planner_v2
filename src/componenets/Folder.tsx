@@ -9,7 +9,7 @@ import { BsHash } from "react-icons/bs";
 import { CgMoreVertical } from "react-icons/cg";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
-export default function SideFolderComponenet({
+export default function SideFolderComponent({
   name,
   id,
   projects,
@@ -21,7 +21,7 @@ export default function SideFolderComponenet({
   name: string;
   id: number;
   deleteFolder: (id: number) => void;
-  addProject: (id: number) => void;
+  addProject: (id: number, name: string, folderId: number) => void;
   renameFolder: (id: number, name: string) => void;
   emptyFolder: (id: number) => void;
   projects:
@@ -41,30 +41,6 @@ export default function SideFolderComponenet({
   const [newName, setNewName] = useState(name);
   const optionsRef = useRef<HTMLDivElement>(null);
 
-  const handleDoubleClick = () => {
-    setEditFolderName(true);
-    if (showOptions) {
-      setShowOptions(false);
-    }
-  };
-
-  const handleBlur = () => {
-    setEditFolderName(false);
-    if (!newName.trim()) setNewName(name);
-  };
-
-  const handleChange = (e: { target: { value: SetStateAction<string> } }) => {
-    setNewName(e.target.value);
-    renameFolder(id, name);
-  };
-
-  const handleKeyDown = (e: { key: string }) => {
-    if (e.key === "Enter") {
-      handleBlur();
-    }
-  };
-
-  // Handle pathname update
   useEffect(() => {
     setHasMounted(true);
     if (pathname) {
@@ -95,9 +71,35 @@ export default function SideFolderComponenet({
 
   if (!hasMounted) return null;
 
+  const generateId = () => Math.floor(Math.random() * 10001);
+
+  const handleDoubleClick = () => {
+    setEditFolderName(true);
+    setShowOptions(false);
+  };
+
+  const handleBlur = () => {
+    setEditFolderName(false);
+    const trimmed = newName.trim();
+    if (!trimmed) {
+      setNewName(name); // revert
+    } else if (trimmed !== name) {
+      renameFolder(id, trimmed); // ✅ call only when name changed
+    }
+  };
+
+  const handleChange = (e: { target: { value: SetStateAction<string> } }) => {
+    setNewName(e.target.value);
+  };
+
+  const handleKeyDown = (e: { key: string }) => {
+    if (e.key === "Enter") {
+      handleBlur();
+    }
+  };
+
   return (
     <div className="text-gray-400 bg-blue-900/20 relative w-full">
-      {/* Options Menu */}
       <AnimatePresence>
         {showOptions && (
           <motion.div
@@ -109,31 +111,36 @@ export default function SideFolderComponenet({
             className="absolute top-10 right-3 z-50 w-40 rounded-md bg-[#131e3c] border border-blue-400/20 shadow-lg p-1 text-sm"
           >
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
               onClick={() => {
-                addProject(id);
+                const newId = generateId();
+                addProject(id, "Untitled Project", newId); // ✅ give placeholder name
               }}
             >
               + New Project
             </button>
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
               onClick={handleDoubleClick}
             >
               Rename folder
             </button>
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
               onClick={() => {
-                emptyFolder(id);
+                if (confirm("Are you sure you want to empty this folder?")) {
+                  emptyFolder(id);
+                }
               }}
             >
               Empty folder
             </button>
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800 transition-all duration-200"
+              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
               onClick={() => {
-                deleteFolder(id);
+                if (confirm("Delete this folder permanently?")) {
+                  deleteFolder(id);
+                }
               }}
             >
               Delete Folder
@@ -142,7 +149,6 @@ export default function SideFolderComponenet({
         )}
       </AnimatePresence>
 
-      {/* Folder Header */}
       <div
         className="flex w-full items-center justify-between px-3 py-3 hover:bg-blue-800/20 group relative"
         onDoubleClick={handleDoubleClick}
@@ -170,7 +176,7 @@ export default function SideFolderComponenet({
             onClick={() => setShow(true)}
           >
             <h1
-              className={`text-sm  ${
+              className={`text-sm ${
                 path === name ? "text-gray-100 font-bold" : ""
               }`}
             >
@@ -193,7 +199,6 @@ export default function SideFolderComponenet({
         </div>
       </div>
 
-      {/* Folder Content */}
       <AnimatePresence initial={false}>
         {show && (
           <motion.div
@@ -210,14 +215,13 @@ export default function SideFolderComponenet({
 
             {projects.map((project) => {
               const isActive = path === name && path2 === project.name;
-
               return (
                 <Link
                   key={project.id}
                   href={`/tasks/${encodeURIComponent(
                     name
                   )}/${encodeURIComponent(project.name)}`}
-                  className={`flex items-center gap-2 py-2 px-4 pl-10 rounded-sm transition-all duration-200 cursor-pointer hover:bg-gray-800 ${
+                  className={`flex items-center gap-2 py-2 px-4 pl-10 text-sm rounded-sm transition-all duration-200 cursor-pointer hover:bg-gray-800 ${
                     isActive ? "text-white font-bold" : ""
                   }`}
                 >

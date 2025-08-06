@@ -9,7 +9,7 @@ type Store = {
   deleteFolder: (id: number) => void;
   renameFolder: (id: number, name: string) => void;
   emptyFolder: (id: number) => void;
-  addProject: (folderId: number, name: string) => void;
+  addProject: (folderId: number, name: string, id: number) => void;
 };
 
 function generateId() {
@@ -36,7 +36,7 @@ export const useFolderStore = create<Store>((set) => ({
     set((state) => ({
       projects: state.projects.filter((p) => p.folderId !== id),
     })),
-  addProject: (folderId, name) =>
+  addProject: (folderId, name, id) =>
     set((state) => ({
       projects: [...state.projects, { id: generateId(), folderId, name }],
     })),

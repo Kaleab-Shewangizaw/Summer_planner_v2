@@ -1,17 +1,23 @@
 "use client";
 
 import SideFolderComponenet from "@/componenets/Folder";
-import { Folder, Project } from "@/utils/types";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useState } from "react";
 import { BiFolderPlus } from "react-icons/bi";
+import { useFolderStore } from "./Store/folderStore";
 
 export default function TasksSidebar() {
+  const folders = useFolderStore((state) => state.folders);
+  const projects = useFolderStore((state) => state.projects);
+  const createFolder = useFolderStore((state) => state.createFolder);
+  const deleteFolder = useFolderStore((state) => state.deleteFolder);
+  const emptyFolder = useFolderStore((state) => state.emptyFolder);
+  const renameFolder = useFolderStore((state) => state.renameFolder);
+  const addProject = useFolderStore((state) => state.addProject);
   const [show, setShow] = useState(true);
   const [addingFolder, setAddingFolder] = useState(true);
-  const [folders, setFolders] = useState<Folder[] | []>([]);
-  const [projects, setProjects] = useState<Project[] | []>([]);
+
   const [folderName, setFolderName] = useState("");
 
   return (
@@ -103,40 +109,4 @@ export default function TasksSidebar() {
       </AnimatePresence>
     </div>
   );
-
-  function generateId() {
-    return Math.floor(Math.random() * 10001);
-  }
-
-  function createFolder(name: string) {
-    const newFolder = {
-      name: name,
-      projects: [],
-      id: generateId(),
-    };
-
-    setFolders([...folders, newFolder]);
-  }
-
-  function deleteFolder(id: number) {
-    setFolders(folders.filter((folder) => folder.id != id));
-  }
-  function emptyFolder(id: number) {
-    const filteredProjects = projects?.filter(
-      (project) => project.folderId !== id
-    );
-    setProjects(filteredProjects);
-    return;
-  }
-  function renameFolder(id: number, name: string) {
-    const newFolders = folders.map((folder) => {
-      if (folder.id !== id) return folder;
-      return { ...folder, name };
-    });
-    setFolders(newFolders);
-    return;
-  }
-  function addProject(id: number) {
-    return;
-  }
 }
