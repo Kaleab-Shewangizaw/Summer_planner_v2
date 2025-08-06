@@ -66,13 +66,6 @@ export default function FolderCard({
           ref={optionsRef}
         >
           <button
-            id="something"
-            className="hover:bg-gray-800 text-xs mt-1 cursor-pointer text-left w-full py-1 px-3 mb-1 rounded-sm transition-all duration-200"
-          >
-            + New project
-          </button>
-
-          <button
             className="hover:bg-gray-800 text-xs mt-1 cursor-pointer text-left w-full py-1 px-3 mb-1 rounded-sm transition-all duration-200"
             onClick={() => {
               setEditFolderName(true);
@@ -84,7 +77,13 @@ export default function FolderCard({
           <button
             className="hover:bg-gray-800 text-xs mt-1 cursor-pointer text-left w-full py-1 px-3 mb-1 rounded-sm transition-all duration-200"
             onClick={() => {
-              emptyFolder(folder.id);
+              if (
+                confirm(
+                  "Are you sure you want to delete all projects inside this folder?"
+                )
+              ) {
+                emptyFolder(folder.id);
+              }
               setShowOptions(false);
             }}
           >
