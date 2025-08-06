@@ -4,7 +4,6 @@ import SideFolderComponenet from "@/componenets/Folder";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useState } from "react";
-import { BiFolderPlus } from "react-icons/bi";
 import { useFolderStore } from "./Store/folderStore";
 
 export default function TasksSidebar() {
