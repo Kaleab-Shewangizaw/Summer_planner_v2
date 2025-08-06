@@ -29,6 +29,7 @@ export default function FolderCard({
   const emptyFolder = useFolderStore((state) => state.emptyFolder);
   const renameFolder = useFolderStore((state) => state.renameFolder);
   const optionsRef = useRef<HTMLDivElement>(null);
+  const editNameRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState(name);
   const [editFolderName, setEditFolderName] = useState(false);
 
@@ -50,6 +51,14 @@ export default function FolderCard({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showOptions]);
+
+  useEffect(() => {
+    if (editNameRef.current) {
+      editNameRef.current.focus();
+    } else {
+      setEditFolderName(false);
+    }
+  }, [editFolderName]);
   return (
     <div className="relative group">
       <div
@@ -107,6 +116,7 @@ export default function FolderCard({
         <BiFolder className="text-7xl" />
         {editFolderName ? (
           <input
+            ref={editNameRef}
             type="text"
             className="w-full text-sm border rounded-md border-blue-900/50"
             autoFocus

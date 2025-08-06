@@ -15,6 +15,8 @@ export interface Project {
   id: number;
   name: string;
   folderId: number;
+  description: string;
+  columns: Column[];
 }
 
 export interface Folder {

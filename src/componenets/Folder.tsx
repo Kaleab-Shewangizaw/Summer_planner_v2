@@ -84,7 +84,7 @@ export default function SideFolderComponent({
     if (!trimmed) {
       setNewName(name); // revert
     } else if (trimmed !== name) {
-      renameFolder(id, trimmed); // ✅ call only when name changed
+      renameFolder(id, trimmed);
     }
   };
 
@@ -114,7 +114,7 @@ export default function SideFolderComponent({
               className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
               onClick={() => {
                 const newId = generateId();
-                addProject(id, "Untitled Project", newId); // ✅ give placeholder name
+                addProject(id, "Untitled Project", newId);
               }}
             >
               + New Project

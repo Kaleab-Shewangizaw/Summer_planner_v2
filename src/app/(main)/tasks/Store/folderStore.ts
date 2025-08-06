@@ -1,6 +1,6 @@
 // stores/useFolderStore.ts
 import { create } from "zustand";
-import { Folder, Project } from "@/utils/types";
+import { Column, Folder, Project } from "@/utils/types";
 
 type Store = {
   folders: Folder[];
@@ -9,7 +9,21 @@ type Store = {
   deleteFolder: (id: number) => void;
   renameFolder: (id: number, name: string) => void;
   emptyFolder: (id: number) => void;
-  addProject: (folderId: number, name: string, id: number) => void;
+  addProject: (
+    folderId: number,
+    name: string,
+    id: number,
+    description: string,
+    columns: Column[]
+  ) => void;
+  deleteProject: (id: number) => void;
+  updateProject: (
+    folderId: number,
+    name: string,
+    id: number,
+    description: string,
+    columns: Column[]
+  ) => void;
 };
 
 function generateId() {
@@ -36,8 +50,21 @@ export const useFolderStore = create<Store>((set) => ({
     set((state) => ({
       projects: state.projects.filter((p) => p.folderId !== id),
     })),
-  addProject: (folderId, name, id) =>
+  addProject: (folderId, name, id, description, columns) =>
     set((state) => ({
-      projects: [...state.projects, { id, folderId, name }],
+      projects: [
+        ...state.projects,
+        { id, folderId, name, description, columns },
+      ],
+    })),
+  deleteProject: (id) =>
+    set((state) => ({
+      projects: state.projects.filter((p) => p.id !== id),
+    })),
+  updateProject: (folderId, name, id, description, columns) =>
+    set((state) => ({
+      projects: state.projects.map((p) =>
+        p.id === id ? { ...p, name, description, folderId, columns } : p
+      ),
     })),
 }));
