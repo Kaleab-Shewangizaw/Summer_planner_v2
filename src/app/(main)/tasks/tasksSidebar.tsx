@@ -10,15 +10,12 @@ import { useFolderStore } from "./Store/folderStore";
 export default function TasksSidebar() {
   const folders = useFolderStore((state) => state.folders);
   const projects = useFolderStore((state) => state.projects);
-  const createFolder = useFolderStore((state) => state.createFolder);
+
   const deleteFolder = useFolderStore((state) => state.deleteFolder);
   const emptyFolder = useFolderStore((state) => state.emptyFolder);
   const renameFolder = useFolderStore((state) => state.renameFolder);
   const addProject = useFolderStore((state) => state.addProject);
   const [show, setShow] = useState(true);
-  const [addingFolder, setAddingFolder] = useState(true);
-
-  const [folderName, setFolderName] = useState("");
 
   return (
     <div className=" bg-blue-900/10 h-full rounded-sm w-fit  group">
@@ -65,44 +62,6 @@ export default function TasksSidebar() {
               ) : (
                 <h2 className="font-light text-center mt-5">No folders</h2>
               )}
-              {addingFolder && (
-                <div className="w-full flex flex-col items-end mt-3">
-                  <input
-                    type="text"
-                    placeholder="New folder name"
-                    className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none placeholder:text-gray-600"
-                    onChange={(e) => {
-                      setFolderName(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        createFolder(folderName);
-                        setAddingFolder(false);
-                      }
-                    }}
-                  />
-                  <button
-                    className="cursor-pointer bg-[#152a6e] rounded-md px-2 py-1 text-sm font-normal mt-3"
-                    onClick={() => {
-                      if (folderName.trim().length === 0) {
-                        return;
-                      }
-                      createFolder(folderName);
-                      setAddingFolder(false);
-                    }}
-                  >
-                    Add
-                  </button>
-                </div>
-              )}
-            </div>
-            <div
-              className="flex justify-end"
-              onClick={() => {
-                setAddingFolder(true);
-              }}
-            >
-              <BiFolderPlus className="text-3xl" />
             </div>
           </motion.div>
         )}

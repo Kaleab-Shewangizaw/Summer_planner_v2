@@ -38,6 +38,6 @@ export const useFolderStore = create<Store>((set) => ({
     })),
   addProject: (folderId, name, id) =>
     set((state) => ({
-      projects: [...state.projects, { id: generateId(), folderId, name }],
+      projects: [...state.projects, { id, folderId, name }],
     })),
 }));
