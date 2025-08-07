@@ -54,7 +54,7 @@ export const useFolderStore = create<Store>((set) => ({
     set((state) => ({
       projects: [
         ...state.projects,
-        { id, folderId, name, description, columns },
+        { id: generateId(), folderId, name, description: "", columns },
       ],
     })),
   deleteProject: (id) =>

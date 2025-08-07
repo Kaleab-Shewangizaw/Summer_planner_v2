@@ -6,20 +6,14 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { GrTask } from "react-icons/gr";
 import { SlOptionsVertical } from "react-icons/sl";
+import { Project } from "@/utils/types";
 
 interface ProjectCardProps {
   name: string;
-  description?: string;
-  status?: "active" | "archived" | "draft";
-  createdAt?: string;
+  project: Project;
 }
 
-export default function ProjectCard({
-  name,
-  description = "No description provided",
-  status = "active",
-  createdAt = "July 2025",
-}: ProjectCardProps) {
+export default function ProjectCard({ name, project }: ProjectCardProps) {
   const [showOptions, setShowOptions] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const path = usePathname();
@@ -88,7 +82,9 @@ export default function ProjectCard({
           {displayName}
         </h2>
         <p className="text-xs text-gray-400 text-center line-clamp-2 mb-3">
-          {description}
+          {project.description
+            ? project.description
+            : "no description provided"}
         </p>
 
         {/* Metadata row */}
@@ -96,7 +92,7 @@ export default function ProjectCard({
           <span className="px-2 py-0.5 rounded-full bg-blue-800/40 text-blue-300 capitalize">
             {status}
           </span>
-          <span className="italic">{createdAt}</span>
+          <span className="italic"></span>
         </div>
       </Link>
     </div>

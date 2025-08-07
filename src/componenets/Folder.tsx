@@ -21,7 +21,7 @@ export default function SideFolderComponent({
   name: string;
   id: number;
   deleteFolder: (id: number) => void;
-  addProject: (id: number, name: string, folderId: number) => void;
+  addProject: (FolderId: number, name: string, id: number) => void;
   renameFolder: (id: number, name: string) => void;
   emptyFolder: (id: number) => void;
   projects:
@@ -40,7 +40,8 @@ export default function SideFolderComponent({
   const [editFolderName, setEditFolderName] = useState(false);
   const [newName, setNewName] = useState(name);
   const optionsRef = useRef<HTMLDivElement>(null);
-
+  const [addingProject, setAddingProject] = useState(false);
+  const [projectName, setProjectName] = useState("");
   useEffect(() => {
     setHasMounted(true);
     if (pathname) {
@@ -113,8 +114,8 @@ export default function SideFolderComponent({
             <button
               className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
               onClick={() => {
-                const newId = generateId();
-                addProject(id, "Untitled Project", newId);
+                setAddingProject(true);
+                setShowOptions(false);
               }}
             >
               + New Project
@@ -131,6 +132,7 @@ export default function SideFolderComponent({
                 if (confirm("Are you sure you want to empty this folder?")) {
                   emptyFolder(id);
                 }
+                setShowOptions(false);
               }}
             >
               Empty folder
@@ -200,7 +202,7 @@ export default function SideFolderComponent({
       </div>
 
       <AnimatePresence initial={false}>
-        {show && (
+        {(show || addingProject) && (
           <motion.div
             key="folder-content"
             initial={{ height: 0, opacity: 0 }}
@@ -230,6 +232,53 @@ export default function SideFolderComponent({
                 </Link>
               );
             })}
+            {addingProject && (
+              <div className="w-full flex flex-col items-end my-1">
+                <input
+                  aria-placeholder="new project"
+                  type="text"
+                  autoFocus
+                  placeholder="new project"
+                  className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none placeholder:text-gray-600"
+                  onChange={(e) => {
+                    setProjectName(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const prName = projectName.trim();
+                      console.log(prName.length);
+                      if (prName.length == 0) {
+                        addProject(id, "untitled project", generateId());
+                        setAddingProject(false);
+                        setShow(true);
+                      } else {
+                        addProject(id, projectName, generateId());
+                        setAddingProject(false);
+                        setShow(true);
+                      }
+                    } else if (e.key === "Escape") {
+                      setAddingProject(false);
+                    }
+                  }}
+                />
+                <button
+                  className="cursor-pointer bg-[#152a6e] rounded-md px-5 py-1  text-sm font-normal mt-3 mx-3 "
+                  onClick={() => {
+                    if (projectName.trim().length === 0) {
+                      setProjectName("untitled project");
+                      addProject(id, projectName, generateId());
+                      setAddingProject(false);
+                      setShow(true);
+                    }
+                    addProject(id, projectName, generateId());
+                    setAddingProject(false);
+                    setShow(true);
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+            )}
 
             {projects.length === 0 && (
               <div className="text-gray-500 text-sm px-4 py-3 italic">

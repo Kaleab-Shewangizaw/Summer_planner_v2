@@ -2,10 +2,24 @@
 import ProjectCard from "@/componenets/ProjectCard";
 import { useState } from "react";
 import { BiFolderPlus, BiPlus } from "react-icons/bi";
-import { GoProject, GoProjectRoadmap } from "react-icons/go";
+import { useFolderStore } from "../Store/folderStore";
+import { usePathname } from "next/navigation";
 
 export default function FolderPage() {
   const [addingProject, setAddingProject] = useState(false);
+  const folders = useFolderStore((state) => state.folders);
+  const projects = useFolderStore((state) => state.projects);
+  const realPath = usePathname();
+  const [projectName, setProjectName] = useState("");
+
+  const path = realPath.split("/")[2].split("%20").join(" ");
+  const folder = folders.filter((f) => f.name === path)[0];
+  const folderId = folder?.id;
+  const addProject = useFolderStore((state) => state.addProject);
+
+  function generateId() {
+    return Math.floor(Math.random() * 10001);
+  }
   return (
     <div className=" h-full max-h-[100%]   w-full  overflow-auto removeScrollBar ">
       <div className=" py-5 border-gray-700 border-t">
@@ -20,7 +34,53 @@ export default function FolderPage() {
             <BiPlus className="text-xl text-gray-300" /> New Project
           </button>
         </div>
-        <div className="flex gap-5 justify-start px-auto flex-wrap  px-2"></div>
+        <div className="flex gap-5 justify-start px-auto flex-wrap  px-2">
+          {projects.filter((p) => p.folderId == folderId).length > 0 ||
+          addingProject ? (
+            projects
+              .filter((p) => p.folderId == folderId)
+              .map((p) => {
+                return <ProjectCard key={p.id} name={p.name} project={p} />;
+              })
+          ) : (
+            <h2>No projects</h2>
+          )}
+
+          {addingProject && (
+            <div className="w-40 flex flex-col items-end mt-3">
+              <BiFolderPlus className="text-7xl text-gray-400 self-center" />
+              <input
+                type="text"
+                autoFocus
+                placeholder="New folder name"
+                className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none placeholder:text-gray-600"
+                onChange={(e) => {
+                  setProjectName(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    addProject(folderId, projectName, generateId(), "", []);
+                    setAddingProject(false);
+                  } else if (e.key === "Escape") {
+                    setAddingProject(false);
+                  }
+                }}
+              />
+              <button
+                className="cursor-pointer bg-[#152a6e] rounded-md px-2 py-1 text-sm font-normal mt-3"
+                onClick={() => {
+                  if (projectName.trim().length === 0) {
+                    return;
+                  }
+                  addProject(folderId, projectName, generateId(), "", []);
+                  setAddingProject(false);
+                }}
+              >
+                Add
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
