@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Summer planner is a to do list app with awesome features. Make plans, excute them.",
 };
 
-export default function RootLayout({
+export default function tasksLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
