@@ -7,7 +7,9 @@ export default function teamsLayout({
 }>) {
   return (
     <div className="flex h-full max-h-full w-full max-w-full flex-col items-center mx-1 ">
-      <BackButton />
+      <div className="w-full">
+        <BackButton />
+      </div>
       {children}
     </div>
   );
