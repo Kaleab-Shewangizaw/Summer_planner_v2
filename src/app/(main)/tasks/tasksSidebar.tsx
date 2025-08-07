@@ -19,15 +19,15 @@ export default function TasksSidebar() {
   return (
     <div className=" bg-blue-900/10 h-full rounded-sm   group">
       <div
-        className=" p-1 h-fit w-fit cursor-pinter  absolute  top-3 left-20   text-2xl cursor-pointer text-gray-100 px-2 py-1 rounded-md bg-blue-900/50"
+        className=" p-1 h-fit w-fit cursor-pinter hidden md:block  absolute  top-3 left-20   text-2xl cursor-pointer text-gray-100 px-2 py-1 rounded-md bg-blue-900/50"
         onClick={() => {
           setShow(!show);
         }}
       >
         {show ? (
-          <h2 className="text-sm">Hide tray</h2>
+          <h2 className="text-sm hidden md:block">Hide tray</h2>
         ) : (
-          <h2 className="text-sm">Show tray</h2>
+          <h2 className="text-sm hidden md:block">Show tray</h2>
         )}
       </div>
       <AnimatePresence initial={false}>
