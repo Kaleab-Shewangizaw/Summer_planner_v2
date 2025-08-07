@@ -11,7 +11,7 @@ export default function Navbar() {
       <div className="w-2/7 rounded-xl bg-black/40 h-9 pr-5 flex items-center">
         <input
           type="text"
-          className="flex-1 focus:outline-none p-2 h-full "
+          className="flex-1 focus:outline-none p-2 h-full placeholder:text-gray-500 text-sm"
           placeholder="Search"
         />
         <BiSearch className="text-2xl text-gray-400 cursor-pointer hover:text-gray-200 transition-all duration-100" />
