@@ -17,6 +17,12 @@ export default function TeamsPage() {
         </div>
         <div className="flex gap-5 justify-start flex-wrap">
           <TeamsCard />
+          <TeamsCard />
+          <TeamsCard />
+          <TeamsCard />
+          <TeamsCard />
+          <TeamsCard />
+          <TeamsCard />
         </div>
       </div>
     </div>
