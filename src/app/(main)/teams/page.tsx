@@ -15,7 +15,7 @@ export default function TeamsPage() {
             </button>
           </div>
         </div>
-        <div className="flex gap-5 justify-start flex-wrap">
+        <div className="flex gap-5  flex-wrap">
           <TeamsCard />
           <TeamsCard />
           <TeamsCard />
