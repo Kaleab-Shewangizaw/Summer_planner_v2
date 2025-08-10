@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 export default function TeamsCard() {
   const [showOptions, setShowOptions] = useState(false);
-  const optionsRef = useRef(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
