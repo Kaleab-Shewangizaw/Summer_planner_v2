@@ -29,7 +29,7 @@ export default function TeamsCard() {
     };
   }, [showOptions]);
   return (
-    <div className="flex flex-col items-center justify-center group hover:bg-gray-950 hover:border-0 h-full text-sm border w-90 border-gray-600 cursor-pointer  px-2 py-1 rounded-md relative">
+    <div className="flex flex-col items-center justify-center group   h-full text-sm border w-90 border-gray-600 cursor-pointer  px-2 py-1 rounded-md relative">
       <div
         className="absolute top-2 right-2 hidden group-hover:block z-100 p-2 rounded-full hover:bg-black/35 cursor-pointer "
         onClick={() => {
@@ -73,12 +73,12 @@ export default function TeamsCard() {
         </motion.div>
       )}
       <h1 className="text-lg font-bold my-3">Team Name</h1>
-      <div className="flex gap-2">
-        <div className="w-10 h-10 border border-gray-600 rounded-full"></div>
-        <div className="w-10 h-10 border border-gray-600 rounded-full"></div>
-        <div className="w-10 h-10 border border-gray-600 rounded-full"></div>
-        <div className="w-10 h-10 border border-gray-600 rounded-full"></div>
-        <div className="w-10 h-10 border border-gray-600 rounded-full"></div>
+      <div className="flex ">
+        <div className="w-10 h-10 rounded-full bg-yellow-500"></div>
+        <div className="w-10 h-10 rounded-full -ml-3 bg-blue-500"></div>
+        <div className="w-10 h-10 rounded-full -ml-3 bg-purple-500"></div>
+        <div className="w-10 h-10 -ml-3 rounded-full bg-green-500"></div>
+        <div className="w-10 h-10 -ml-3 rounded-full bg-amber-500"></div>
       </div>
       <p className="my-3 text-gray-500">+3 members</p>
       <div className="flex  w-full px-3 justify-between mb-3">
