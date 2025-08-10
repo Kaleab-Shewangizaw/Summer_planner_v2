@@ -10,35 +10,84 @@ import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import ColumnComponenet from "./Column";
 import { createPortal } from "react-dom";
 import TaskComponent from "./TaskComponent";
+import { usePathname } from "next/navigation";
+import { useFolderStore } from "../../Store/folderStore";
+import ProjectTitle from "./projectTitle";
 
 export default function ProjectPage() {
+  const projects = useFolderStore((state) => state.projects);
+  const realPath = usePathname();
+  const projectPath = realPath.split("/")[3].split("%20").join(" ");
+  const project = projects?.filter((p) => p.name === projectPath)[0];
+
   const [columns, setColumns] = useState<Column[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  // const sensors = useSensors();
+  const [editProject, setEditProject] = useState(false);
+
+  const [projectName, setProjectName] = useState(project.name);
+  const [projectDesc, setProjectDesc] = useState(project.description);
+
+  console.log(project);
 
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
   return (
-    <div className="h-full w-full overflow-hidden px-3 pt-1 text-sm ">
+    <div className="h-full w-full overflow-hidden pt-1 text-sm ">
+      {editProject && (
+        <div className="absolute w-full h-full z-100 flex items-center justify-center   top-0 left-0 bg-gray-900/50">
+          <div className="w-180 h-140 rounded-md bg-gray-950 flex flex-col px-5 py-10 gap-4 relative">
+            <button
+              className="absolute top-2 right-2 rounded-md bg-black/90 text-gray-300 hover:text-red-400 cursor-pointer px-2 py-2"
+              onClick={() => {
+                setEditProject(false);
+              }}
+            >
+              Cancel
+            </button>
+            <p>Project name</p>
+            <input
+              className="bg-gray-900/50 w-full  px-2 py-3  text-2xl focus:outline-none  rounded-md resize-y placeholder:text-gray-500 placeholder:text-xl resize-x-none"
+              placeholder="Project name"
+              type="text"
+              value={projectName}
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  setEditProject(false);
+                }
+              }}
+              onChange={(e) => {
+                setProjectName(e.target.value);
+              }}
+            />
+            <p>Project description</p>
+            <textarea
+              className="bg-gray-900 w-full h-40 rounded-md resize-y resize-x-none text-lg focus:outline-none px-2 py-1"
+              value={projectDesc}
+              onChange={(e) => {
+                setProjectDesc(e.target.value);
+              }}
+            ></textarea>
+          </div>
+        </div>
+      )}
       <DndContext
         onDragStart={dragStart}
         onDragEnd={dragEnd}
         onDragOver={ondragOver}
       >
-        <div className=" w-full overflow-auto removeScrollBar h-full  flex flex-col">
-          <div className="flex w-full items-center justify-between mb-1">
-            <h1 className="text-lg font-semibold">Project Board</h1>
-            <button
-              onClick={createNewColumn}
-              className="mt-1 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 min-w-fit"
-            >
-              + Add Column
-            </button>
-          </div>
-          <div className="flex gap-2 justify-start overflow-auto  py-2 pr-100 flex-1 text-sm w-full removeScrollBar px-2 items-start">
+        <div className=" w-full overflow-auto removeScrollBar h-full  flex flex-col ">
+          <ProjectTitle
+            project={project}
+            setEditProject={setEditProject}
+            editProject={editProject}
+            createNewColumn={createNewColumn}
+          />
+
+          <div className="flex gap-2 justify-start overflow-auto  py-2 pr-100 flex-1 text-sm w-full removeScrollBar  items-start">
             <SortableContext items={columnsId}>
               {columns.map((column) => (
                 <ColumnComponenet

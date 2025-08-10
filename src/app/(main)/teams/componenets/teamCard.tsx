@@ -74,11 +74,11 @@ export default function TeamsCard() {
       )}
       <h1 className="text-lg font-bold my-3">Team Name</h1>
       <div className="flex ">
-        <div className="w-10 h-10 rounded-full bg-yellow-500"></div>
-        <div className="w-10 h-10 rounded-full -ml-3 bg-blue-500"></div>
-        <div className="w-10 h-10 rounded-full -ml-3 bg-purple-500"></div>
-        <div className="w-10 h-10 -ml-3 rounded-full bg-green-500"></div>
-        <div className="w-10 h-10 -ml-3 rounded-full bg-amber-500"></div>
+        <div className="w-10 h-10 rounded-full bg-yellow-600"></div>
+        <div className="w-10 h-10 rounded-full -ml-3 bg-blue-600"></div>
+        <div className="w-10 h-10 rounded-full -ml-3 bg-purple-600"></div>
+        <div className="w-10 h-10 -ml-3 rounded-full bg-green-600"></div>
+        <div className="w-10 h-10 -ml-3 rounded-full bg-amber-600"></div>
       </div>
       <p className="my-3 text-gray-500">+3 members</p>
       <div className="flex  w-full px-3 justify-between mb-3">
