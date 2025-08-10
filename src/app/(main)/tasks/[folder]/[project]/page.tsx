@@ -84,8 +84,16 @@ export default function ProjectPage() {
             project={project}
             setEditProject={setEditProject}
             editProject={editProject}
-            createNewColumn={createNewColumn}
           />
+          <div className="flex items-center justify-between">
+            <h1>Last update at Aug,10,2024 by You - added Column5</h1>
+            <button
+              onClick={createNewColumn}
+              className="mt-1 bg-blue-500 text-white px-3 py-1 cursor-pointer border border-blue-500 rounded hover:bg-blue-600 font-semibold min-w-fit"
+            >
+              + Add Column
+            </button>
+          </div>
 
           <div className="flex gap-2 justify-start overflow-auto  py-2 pr-100 flex-1 text-sm w-full removeScrollBar  items-start">
             <SortableContext items={columnsId}>
