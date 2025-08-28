@@ -46,7 +46,7 @@ export default function TasksPage() {
             </div>
           )}
           {addingFolder && (
-            <div className="w-40 flex flex-col items-end mt-3">
+            <div className="w-45  flex flex-col items-end mt-3">
               <BiFolderPlus className="text-7xl text-gray-400 self-center" />
               <input
                 type="text"
@@ -58,25 +58,52 @@ export default function TasksPage() {
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    createFolder(folderName);
-                    setAddingFolder(false);
+                    const fdName = folderName.trim();
+
+                    if (fdName.length === 0) {
+                      createFolder("untitled folder");
+                      setAddingFolder(false);
+                      setFolderName("");
+                    } else {
+                      createFolder(folderName);
+                      setAddingFolder(false);
+                      setFolderName("");
+                    }
                   } else if (e.key === "Escape") {
                     setAddingFolder(false);
                   }
                 }}
               />
-              <button
-                className="cursor-pointer bg-[#152a6e] rounded-md px-2 py-1 text-sm font-normal mt-3"
-                onClick={() => {
-                  if (folderName.trim().length === 0) {
-                    return;
-                  }
-                  createFolder(folderName);
-                  setAddingFolder(false);
-                }}
-              >
-                Add
-              </button>
+              <div className="flex">
+                <button
+                  className="cursor-pointer bg-[#101113] rounded-md px-3 py-1  text-sm font-normal mt-3 mx-3 "
+                  onClick={() => {
+                    setAddingFolder(false);
+
+                    setFolderName("");
+                  }}
+                >
+                  Cancel
+                </button>{" "}
+                <button
+                  className="cursor-pointer bg-[#152a6e] rounded-md px-5 py-1  text-sm font-normal mt-3 mx-3 "
+                  onClick={() => {
+                    const fdName = folderName.trim();
+
+                    if (fdName.length === 0) {
+                      createFolder("untitled folder");
+                      setAddingFolder(false);
+                      setFolderName("");
+                    } else {
+                      createFolder(folderName);
+                      setAddingFolder(false);
+                      setFolderName("");
+                    }
+                  }}
+                >
+                  Add
+                </button>
+              </div>
             </div>
           )}
         </div>
