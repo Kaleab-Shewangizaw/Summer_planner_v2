@@ -1,30 +1,57 @@
-import TeamsCard from "./componenets/teamCard";
+"use client";
+import { useState } from "react";
+import Head from "next/head";
+
+import { Team } from "@/utils/types";
+import TeamHeader from "./componenets/TeamHeader";
+import TeamGrid from "./componenets/TeamGrid";
+import TeamModal from "./componenets/TeamModal";
 
 export default function TeamsPage() {
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter teams based on search query
+  const filteredTeams = teams.filter(
+    (team) =>
+      team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      team.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="h-full max-h-[100%] w-full overflow-auto removeScrollBar">
-      <div className="border-t py-5 border-gray-700">
-        <div className="flex items-center justify-between mb-3  px-4">
-          <p className="text-gray-300 text-lg">Teams</p>
-          <div className="flex gap-2">
-            <button className="cursor-pointer bg-blue-900/50 rounded-md px-2 py-1 text-sm font-normal hover:bg-blue-900/70 transition-all duration-200 flex items-center gap-2">
-              Create a team
-            </button>
-            <button className="cursor-pointer bg-blue-900/50 rounded-md px-2 py-1 text-sm font-normal hover:bg-blue-900/70 transition-all duration-200 flex items-center gap-2">
-              Join a team
-            </button>
-          </div>
-        </div>
-        <div className="flex gap-5  flex-wrap">
-          <TeamsCard />
-          <TeamsCard />
-          <TeamsCard />
-          <TeamsCard />
-          <TeamsCard />
-          <TeamsCard />
-          <TeamsCard />
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-blue-100">
+      <Head>
+        <title>Teams | Summer Planner</title>
+        <meta name="description" content="Collaborate with your teams" />
+      </Head>
+
+      <main className="container mx-auto px-4 py-8">
+        <TeamHeader
+          teamCount={teams.length}
+          onAddTeam={() => setShowModal(true)}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+
+        <TeamGrid
+          teams={filteredTeams}
+          onEditTeam={(team) => console.log("Edit", team)}
+          onDeleteTeam={(teamId) =>
+            setTeams(teams.filter((t) => t.id !== teamId))
+          }
+        />
+
+        {showModal && (
+          <TeamModal
+            onClose={() => setShowModal(false)}
+            onSave={(newTeam) => {
+              setTeams([...teams, { ...newTeam, id: Date.now().toString() }]);
+              setShowModal(false);
+            }}
+          />
+        )}
+      </main>
     </div>
   );
 }

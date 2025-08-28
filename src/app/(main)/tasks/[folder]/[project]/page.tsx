@@ -55,15 +55,7 @@ export default function ProjectPage() {
             setEditProject={setEditProject}
             editProject={editProject}
           />
-          <div className="flex items-center justify-between px-1">
-            <h1 className="text-md font-normal text-white/70">
-              Last update at <span className="font-semibold">Aug,10,2025</span>{" "}
-              by{" "}
-              <span className="text-gray-300 underline cursor-pointer font-semibold hover:text-gray-100">
-                user name
-              </span>{" "}
-              - added Column5
-            </h1>
+          <div className="flex items-center justify-end px-1">
             <button
               onClick={createNewColumn}
               className="mt-1 bg-blue-700/80 text-white px-3 py-1 cursor-pointer  rounded hover:bg-blue-700 font-semibold min-w-fit"

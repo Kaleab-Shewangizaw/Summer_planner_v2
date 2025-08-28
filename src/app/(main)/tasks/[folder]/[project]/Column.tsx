@@ -77,7 +77,7 @@ export default function ColumnComponenet({
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-gray-800 p-4 pb-2 px-1 rounded-lg shadow-md w-100 min-w-100 relative h-full min-h-full flex flex-col justify-between"
+      className="bg-gray-800/50 p-4 pb-2 px-1 rounded-lg shadow-md w-100 min-w-100 relative h-full min-h-full flex flex-col justify-between"
     >
       <div className="">
         {isEditing ? (
@@ -107,7 +107,7 @@ export default function ColumnComponenet({
         />
       </div>
 
-      <div className="flex flex-col flex-1 overflow-auto removeScrollBar px-2 mt-3 pb-100">
+      <div className="flex flex-col flex-1 overflow-auto removeScrollBar px-2 mt-3 pb-50">
         <SortableContext items={taskIds}>
           {tasks.map((task) => (
             <TaskComponent key={task.id} task={task} deleteTask={deleteTask} />

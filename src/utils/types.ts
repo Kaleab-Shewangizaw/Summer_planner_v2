@@ -24,3 +24,18 @@ export interface Folder {
   name: string;
   projects: Project[];
 }
+
+export interface Team {
+  id: string;
+  name: string;
+  description: string;
+  status: "active" | "archived";
+  memberCount: number;
+  members: TeamMember[];
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+}

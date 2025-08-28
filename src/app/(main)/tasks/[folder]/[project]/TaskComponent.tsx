@@ -12,7 +12,8 @@ export default function TaskComponent({
   deleteTask: (id: number) => void;
 }) {
   const [editMode, setEditMode] = useState(false);
-  const [taskContent, setTaskContent] = useState(task.content);
+  const [taskTitle, setTaskTitle] = useState(task.content);
+  const [tags, setTags] = useState(["bg-red-400", "bg-green-500"]);
 
   const {
     setNodeRef,
@@ -30,7 +31,7 @@ export default function TaskComponent({
       <div
         ref={setNodeRef}
         style={style}
-        className="bg-blue-900/40 p-5 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow"
+        className="bg-gray-600/50 p-5 rounded-md shadow-sm border  mb-2 cursor-grab hover:shadow-md transition-shadow"
       />
     );
   }
@@ -39,43 +40,41 @@ export default function TaskComponent({
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-blue-900/40 p-3 rounded-md shadow-sm border border-blue-900 mb-2 cursor-grab hover:shadow-md transition-shadow relative"
+      className="bg-gray-600/30 p-3 rounded-md shadow-sm  mb-2 cursor-grab hover:shadow-md transition-shadow relative"
       onClick={() => setEditMode(true)}
     >
       <GrDrag
         {...attributes}
         {...listeners}
-        className="text-2xl focus:outline-none text-gray-500 absolute top-4 cursor-grabbing left-2"
+        className="text-2xl focus:outline-none text-gray-500 absolute top-4 cursor-grabbing right-2"
       />
 
       {editMode ? (
         <input
           className="  border rounded outline-none px-2 w-full"
-          value={taskContent}
-          onChange={(e) => setTaskContent(e.target.value)}
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
           autoFocus
           onBlur={() => {
             setEditMode(false);
-            task.content = taskContent;
+            task.content = taskTitle;
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               setEditMode(false);
-              task.content = taskContent;
+              task.content = taskTitle;
             }
           }}
         />
       ) : (
         <div className="flex justify-between items-center">
-          <span>{taskContent}</span>
-          <button
-            onClick={() => {
-              deleteTask(task.id);
-            }}
-            className="text-gray-400 hover:text-red-500"
-          >
-            ×
-          </button>
+          <h1 className="">{taskTitle}</h1>
+
+          <div className="flex mr-10  gap-3">
+            {tags.map((tag) => {
+              return <div key={tag} className={`w-4 h-2 ${tag}`}></div>;
+            })}
+          </div>
         </div>
       )}
     </div>
