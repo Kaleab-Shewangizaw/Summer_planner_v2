@@ -4,6 +4,7 @@ import { BsGoogle } from "react-icons/bs";
 import { FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +24,7 @@ export default function Login() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative z-10 bg-gray-900/50 backdrop-blur-md border border-gray-700 rounded-2xl p-8 md:p-12 w-full max-w-md"
+        className="relative z-10 bg-gray-900/50 backdrop-blur-md border border-gray-700 rounded-2xl p-8 md:p-12 w-full max-w-xl"
       >
         {/* Logo */}
         <div className="text-center mb-8">
@@ -122,12 +123,12 @@ export default function Login() {
         <div className="text-center mt-6">
           <p className="text-gray-400 text-sm">
             Don&apos;t have an account?{" "}
-            <a
-              href="#"
+            <Link
+              href="/register"
               className="text-blue-400 hover:text-blue-300 font-semibold"
             >
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
 
