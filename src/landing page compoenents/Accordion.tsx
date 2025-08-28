@@ -2,37 +2,40 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BiMinus, BiPlus } from "react-icons/bi";
+import { FaPlus, FaMinus } from "react-icons/fa";
 
-export default function Accordion({
-  title,
-  content,
-}: {
+interface AccordionProps {
   title: string;
   content: string;
-}) {
-  const [expand, setExpand] = useState<boolean>(false);
+}
+
+export default function Accordion({ title, content }: AccordionProps) {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="w-[80%] bg-[#181f2e] rounded-lg">
-      <div
-        className="flex cursor-pointer items-center font-bold w-full justify-between p-3 mb-0"
-        onClick={() => setExpand(!expand)}
+    <div className="border border-gray-700 rounded-xl bg-gray-900/30 backdrop-blur-sm overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-800/50 transition-colors duration-200"
       >
-        {title} {expand ? <BiMinus /> : <BiPlus />}
-      </div>
+        <span className="text-lg font-medium text-white">{title}</span>
+        {isOpen ? (
+          <FaMinus className="text-blue-400 flex-shrink-0" />
+        ) : (
+          <FaPlus className="text-blue-400 flex-shrink-0" />
+        )}
+      </button>
 
-      <AnimatePresence initial={false}>
-        {expand && (
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
-            key="content"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden px-3 mt-0 pb-3"
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
           >
-            {content}
+            <div className="px-6 py-4 text-gray-300">{content}</div>
           </motion.div>
         )}
       </AnimatePresence>

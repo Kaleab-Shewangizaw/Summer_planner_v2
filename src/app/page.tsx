@@ -5,11 +5,8 @@ import FeaturesSection from "@/landing page compoenents/FeaturesSection";
 import Footer from "@/landing page compoenents/Footer";
 import HeroSection from "@/landing page compoenents/HeroSection";
 import LandingNavbar from "@/landing page compoenents/Navbar";
-import PreviewSection from "@/landing page compoenents/PreviewSection";
-import PricingSection from "@/landing page compoenents/PricingSection";
 
-// ... other imports
-import { motion } from "framer-motion";
+import PricingSection from "@/landing page compoenents/PricingSection";
 
 export default function Home() {
   return (
@@ -25,7 +22,6 @@ export default function Home() {
       <ChosenBySection />
       <FeaturesSection />
       <Features2 />
-      <PreviewSection />
       <PricingSection />
       <FaqSection />
       <Footer />
