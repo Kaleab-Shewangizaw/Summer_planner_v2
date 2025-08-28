@@ -15,8 +15,9 @@ export default function ProjectTitle({
   return (
     <div className="flex  flex-col rounded-md px-2 py-3 mb-1 bg-[#152a61]">
       <div className="flex items-center w-full justify-between">
-        <h1 className="text-2xl font-semibold text-white/80 mb-3">
+        <h1 className="text-2xl font-semibold text-white/80 mb-3 flex gap-2">
           {project.name}{" "}
+          <span className="text-green-500 text-sm">Completed</span>
         </h1>
         <button
           className="text-2xl text-white/70 cursor-pointer "

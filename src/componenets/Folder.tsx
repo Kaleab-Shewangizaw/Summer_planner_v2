@@ -246,7 +246,7 @@ export default function SideFolderComponent({
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       const prName = projectName.trim();
-                      console.log(prName.length);
+
                       if (prName.length == 0) {
                         addProject(id, "untitled project", generateId());
                         setAddingProject(false);
