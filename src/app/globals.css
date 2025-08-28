@@ -37,3 +37,7 @@ body {
 .removeScrollBar::-webkit-scrollbar-thumb {
   background-color: #3177c2;
 }
+
+html {
+  scroll-behavior: smooth;
+}

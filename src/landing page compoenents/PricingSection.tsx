@@ -70,6 +70,15 @@ export default function PricingSection() {
         <div className="absolute top-20 right-20 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
+      <div className="h-full w-full absolute top-0 left-0 bg-gradient-to-r from-black/30 to-blue-500/20 backdrop-blur-xs z-1000 flex items-center justify-center">
+        <Button
+          text="Continue For Free"
+          fill={true}
+          bold={""}
+          size={"sm"}
+          className="shadow-2xl border border-amber-50"
+        />
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div

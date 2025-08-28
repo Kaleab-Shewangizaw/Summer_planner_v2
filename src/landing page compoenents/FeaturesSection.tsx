@@ -90,8 +90,32 @@ export default function FeaturesSection() {
 
               {/* Feature visualization placeholder */}
               <div
-                className={`mt-6 h-32 rounded-lg bg-gradient-to-r ${feature.color} opacity-20`}
-              ></div>
+                className={`mt-6 h-32 rounded-lg bg-gradient-to-r ${feature.color} opacity-80`}
+              >
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700/50">
+                  <div className="flex items-center mb-4">
+                    <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                    <div className="flex-1 bg-gray-700/50 rounded h-2 ml-2"></div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 border border-green-500 rounded-sm mr-3"></div>
+                      <div className="bg-gray-700/50 h-2 rounded w-1/2"></div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 border border-blue-500 rounded-sm mr-3"></div>
+                      <div className="bg-gray-700/50 h-2 rounded w-2/3"></div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 border border-purple-500 rounded-sm mr-3"></div>
+                      <div className="bg-gray-700/50 h-2 rounded w-3/4"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>

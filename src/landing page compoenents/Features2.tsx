@@ -59,7 +59,7 @@ export default function Features2() {
               </span>{" "}
               your Performance with{" "}
               <motion.span
-                className="inline-block bg-red-500 text-white font-bold text-2xl h-12 w-12 rounded-md p-2 flex items-end  ml-2"
+                className="inline-flex bg-red-500 text-white font-bold text-2xl h-12 w-12 rounded-md p-2  items-end  ml-2"
                 animate={{ rotateZ: [0, 5, -5, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 whileHover={{
