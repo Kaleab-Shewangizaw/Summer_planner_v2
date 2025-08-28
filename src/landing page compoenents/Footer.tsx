@@ -1,10 +1,6 @@
 import Logo from "@/componenets/Logo";
-import { BiEnvelope, BiPhone, BiHeart } from "react-icons/bi";
-import {
-  BsFillThunderboltFill,
-  BsLightning,
-  BsThunderbolt,
-} from "react-icons/bs";
+import { BiEnvelope, BiPhone } from "react-icons/bi";
+import { BsLightning } from "react-icons/bs";
 import { FaTwitter, FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
