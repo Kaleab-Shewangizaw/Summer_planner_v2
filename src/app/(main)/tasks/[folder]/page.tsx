@@ -1,9 +1,10 @@
 "use client";
 import ProjectCard from "@/componenets/ProjectCard";
 import { useState } from "react";
-import { BiFolderPlus, BiPlus } from "react-icons/bi";
+import { BiPlus } from "react-icons/bi";
 import { useFolderStore } from "../Store/folderStore";
 import { usePathname } from "next/navigation";
+import { FaTasks } from "react-icons/fa";
 
 export default function FolderPage() {
   const [addingProject, setAddingProject] = useState(false);
@@ -21,7 +22,7 @@ export default function FolderPage() {
     return Math.floor(Math.random() * 10001);
   }
   return (
-    <div className=" h-full max-h-[100%]   w-full  overflow-auto removeScrollBar ">
+    <div className=" h-full max-h-[100%] mb-20   w-full  overflow-auto removeScrollBar ">
       <div className=" py-5 border-gray-700 border-t">
         <div className="flex items-center justify-between mb-3  px-4">
           <p className="text-gray-300 text-lg">Projects</p>
@@ -43,16 +44,23 @@ export default function FolderPage() {
                 return <ProjectCard key={p.id} name={p.name} project={p} />;
               })
           ) : (
-            <h2>No projects</h2>
+            <div className="flex flex-col items-center justify-center w-full h-full">
+              <h2 className="font-light text-4xl w-full mt-5 text-gray-400 text-center">
+                No Projects
+              </h2>
+              <h2 className="text-gray-400">
+                Add project by clicking <i>+ New project</i> button.
+              </h2>
+            </div>
           )}
 
           {addingProject && (
             <div className="w-40 flex flex-col items-end mt-3">
-              <BiFolderPlus className="text-7xl text-gray-400 self-center" />
+              <FaTasks className="text-7xl text-gray-400 self-center" />
               <input
                 type="text"
                 autoFocus
-                placeholder="New folder name"
+                placeholder="New Project name"
                 className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none placeholder:text-gray-600"
                 onChange={(e) => {
                   setProjectName(e.target.value);
