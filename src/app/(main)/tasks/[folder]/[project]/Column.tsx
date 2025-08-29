@@ -15,6 +15,7 @@ export default function ColumnComponenet({
   createTask,
   updateColumn,
   deleteTask,
+  updateTask,
   tasks,
 }: {
   column: Column;
@@ -22,6 +23,7 @@ export default function ColumnComponenet({
   createTask: (id: number) => void;
   updateColumn: (columnId: number, title: string) => void;
   deleteTask: (id: number) => void;
+  updateTask: (id: number, updates: Partial<Task>) => void;
   tasks: Task[];
 }) {
   const [title, setTitle] = useState(column.title);
@@ -110,7 +112,12 @@ export default function ColumnComponenet({
       <div className="flex flex-col flex-1 overflow-auto removeScrollBar px-2 mt-3 pb-50">
         <SortableContext items={taskIds}>
           {tasks.map((task) => (
-            <TaskComponent key={task.id} task={task} deleteTask={deleteTask} />
+            <TaskComponent
+              key={task.id}
+              task={task}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+            />
           ))}
         </SortableContext>
       </div>

@@ -74,6 +74,7 @@ export default function ProjectPage() {
                   updateColumn={updateColumn}
                   deleteTask={deleteTask}
                   createTask={createTask}
+                  updateTask={updateTask}
                   tasks={tasks.filter((task) => task.columnId === column.id)}
                 />
               ))}
@@ -89,13 +90,18 @@ export default function ProjectPage() {
                   deleteColumn={deleteColumn}
                   createTask={createTask}
                   deleteTask={deleteTask}
+                  updateTask={updateTask}
                   tasks={tasks.filter(
                     (task) => task.columnId === activeColumn.id
                   )}
                 />
               )}
               {activeTask && (
-                <TaskComponent task={activeTask} deleteTask={deleteTask} />
+                <TaskComponent
+                  task={activeTask}
+                  deleteTask={deleteTask}
+                  updateTask={updateTask}
+                />
               )}
             </DragOverlay>,
             document.body
@@ -134,6 +140,11 @@ export default function ProjectPage() {
       id: generateId(),
       columnId: id,
       content: `task ${tasks.length + 1}`,
+      description: "",
+      checklistItems: [],
+      attachments: [],
+      tags: [],
+      status: "in-progress",
     };
 
     setTasks([...tasks, newTask]);
@@ -141,6 +152,16 @@ export default function ProjectPage() {
 
   function deleteTask(id: number) {
     setTasks(tasks.filter((task) => task.id !== id));
+  }
+  function updateTask(id: number, updates: Partial<Task>) {
+    setTasks(
+      tasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, ...updates };
+        }
+        return task;
+      })
+    );
   }
 
   // Drag and drop handlers
@@ -221,7 +242,7 @@ export default function ProjectPage() {
         if (activeTaskIndex === -1) return tasks;
 
         const updatedTasks = [...tasks];
-        updatedTasks[activeTaskIndex].columnId = columnId;
+        updatedTasks[activeTaskIndex].columnId = Number(columnId);
 
         return updatedTasks;
       });
