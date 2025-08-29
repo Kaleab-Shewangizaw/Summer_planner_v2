@@ -1,7 +1,7 @@
 "use client";
-import Logo from "@/componenets/Logo";
+import Logo from "@/app/componenets/Logo";
 import NavLinks from "./NavLinks";
-import Button from "@/componenets/Button";
+import Button from "@/app/componenets/Button";
 import { useState } from "react";
 
 export default function LandingNavbar() {

@@ -1,6 +1,6 @@
 "use client";
 
-import SideFolderComponenet from "@/componenets/Folder";
+import SideFolderComponenet from "@/app/componenets/Folder";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useState } from "react";

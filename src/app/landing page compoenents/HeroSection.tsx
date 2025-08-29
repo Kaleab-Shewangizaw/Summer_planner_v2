@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/componenets/Button";
+import Button from "@/app/componenets/Button";
 import { motion } from "framer-motion";
 
 export default function HeroSection() {

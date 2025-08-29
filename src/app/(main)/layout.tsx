@@ -1,5 +1,5 @@
-import Navbar from "@/componenets/Navbar";
-import Sidebar from "@/componenets/SideBar";
+import Navbar from "@/app/componenets/Navbar";
+import Sidebar from "@/app/componenets/SideBar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

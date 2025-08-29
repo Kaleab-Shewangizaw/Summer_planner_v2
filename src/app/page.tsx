@@ -1,12 +1,12 @@
-import ChosenBySection from "@/landing page compoenents/ChosenBySection";
-import FaqSection from "@/landing page compoenents/FAQSection";
-import Features2 from "@/landing page compoenents/Features2";
-import FeaturesSection from "@/landing page compoenents/FeaturesSection";
-import Footer from "@/landing page compoenents/Footer";
-import HeroSection from "@/landing page compoenents/HeroSection";
-import LandingNavbar from "@/landing page compoenents/Navbar";
+import ChosenBySection from "@/app/landing page compoenents/ChosenBySection";
+import FaqSection from "@/app/landing page compoenents/FAQSection";
+import Features2 from "@/app/landing page compoenents/Features2";
+import FeaturesSection from "@/app/landing page compoenents/FeaturesSection";
+import Footer from "@/app/landing page compoenents/Footer";
+import HeroSection from "@/app/landing page compoenents/HeroSection";
+import LandingNavbar from "@/app/landing page compoenents/Navbar";
 
-import PricingSection from "@/landing page compoenents/PricingSection";
+import PricingSection from "@/app/landing page compoenents/PricingSection";
 
 export default function Home() {
   return (

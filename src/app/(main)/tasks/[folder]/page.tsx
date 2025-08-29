@@ -1,5 +1,5 @@
 "use client";
-import ProjectCard from "@/componenets/ProjectCard";
+import ProjectCard from "@/app/componenets/ProjectCard";
 import { useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { useFolderStore } from "../Store/folderStore";
