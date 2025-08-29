@@ -5,7 +5,7 @@ import { Task } from "@/utils/types";
 import { useState } from "react";
 import { GrDrag } from "react-icons/gr";
 import TaskModal from "./TaskModal";
-import { BiCalendar, BiCheckCircle } from "react-icons/bi";
+import { BiCalendar } from "react-icons/bi";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { GiPaperClip } from "react-icons/gi";
 import { MdCheckBox } from "react-icons/md";
