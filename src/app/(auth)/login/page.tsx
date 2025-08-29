@@ -1,5 +1,5 @@
 "use client";
-import Logo from "@/app/componenets/Logo";
+import Logo from "@/componenets/Logo";
 import { BsGoogle } from "react-icons/bs";
 import { FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";

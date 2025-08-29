@@ -1,6 +1,6 @@
 "use client";
 
-import FolderCard from "@/app/componenets/FolderCard";
+import FolderCard from "@/componenets/FolderCard";
 import { useFolderStore } from "./Store/folderStore";
 import { useState } from "react";
 import { BiFolderPlus } from "react-icons/bi";

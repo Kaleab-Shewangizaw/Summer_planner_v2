@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import TasksSidebar from "./tasksSidebar";
-import Path from "@/app/componenets/Path";
+import Path from "@/componenets/Path";
 
 export const metadata: Metadata = {
   title: "Summer Planner",

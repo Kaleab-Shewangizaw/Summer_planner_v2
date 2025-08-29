@@ -1,5 +1,5 @@
 "use client";
-import Logo from "@/app/componenets/Logo";
+import Logo from "@/componenets/Logo";
 import { FaEnvelope, FaArrowLeft, FaCheckCircle } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";

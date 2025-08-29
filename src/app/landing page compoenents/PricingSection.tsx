@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/app/componenets/Button";
+import Button from "@/componenets/Button";
 import { motion } from "framer-motion";
 import { FaCheck, FaCrown, FaStar, FaUsers, FaRocket } from "react-icons/fa";
 
