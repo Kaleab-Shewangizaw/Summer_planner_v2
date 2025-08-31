@@ -169,7 +169,7 @@ export default function SideFolderComponent({
             onChange={handleChange}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="w-[90%] px-2 py-1 border border-blue-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xl"
+            className="w-[90%] px-2 py-1 border border-blue-800 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
           />
         ) : (
           <Link
