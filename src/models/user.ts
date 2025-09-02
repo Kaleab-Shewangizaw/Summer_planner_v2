@@ -1,11 +1,20 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
+interface Folder {
+  name: string;
+  icon: string;
+  isFavorite: boolean;
+  projects: mongoose.Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IUser extends Document {
   name: string;
   email: string;
   image?: string;
   emailVerified: boolean;
-  folders?: mongoose.Types.ObjectId[];
+  folders?: Folder[];
   teams: mongoose.Types.ObjectId[];
   ownedTeams: mongoose.Types.ObjectId[];
   createdAt: Date;
@@ -32,8 +41,33 @@ const UserSchema: Schema = new Schema(
     },
     folders: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Folders",
+        name: {
+          type: String,
+
+          required: true,
+        },
+        icon: {
+          type: String,
+          required: true,
+        },
+        isFavorite: {
+          type: Boolean,
+          default: false,
+        },
+        projects: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Project",
+          },
+        ],
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        updatedAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
     teams: [
