@@ -1,8 +1,10 @@
 "use client";
 
 // components/tasks/TaskModal.tsx
-import { Task, ChecklistItem, Attachment, Tag } from "@/utils/types";
+import { Task, ChecklistItem, Tag } from "@/utils/types";
 import { useState } from "react";
+import { BiX } from "react-icons/bi";
+import { FaPaperclip } from "react-icons/fa6";
 
 interface TaskModalProps {
   task: Task;
@@ -48,11 +50,11 @@ export default function TaskModal({
     if (!newTag.trim()) return;
 
     const tagColors = [
-      "bg-red-500",
-      "bg-blue-500",
-      "bg-green-500",
-      "bg-yellow-500",
-      "bg-purple-500",
+      "bg-red-800",
+      "bg-blue-800",
+      "bg-green-800",
+      "bg-yellow-800",
+      "bg-purple-800",
     ];
     const randomColor = tagColors[Math.floor(Math.random() * tagColors.length)];
 
@@ -83,14 +85,14 @@ export default function TaskModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50 bg-opacity-50 ">
       <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto"
+        className=" rounded-xl shadow-xl w-fit  bg-[#0f161e] mx-4 max-h-[90vh] overflow-y-auto removeScrollBar p-3 border border-gray-800"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex justify-between items-start mb-4">
+        <div className="p-3 border-b border-gray-500">
+          <div className="flex justify-between items-start mb-3">
             <input
               className="text-xl font-semibold w-full border-none focus:outline-none focus:ring-0"
               value={title}
@@ -140,14 +142,14 @@ export default function TaskModal({
         </div>
 
         {/* Main Content */}
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="p-2 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column - Details */}
-          <div className="lg:col-span-2">
+          <div className="">
             {/* Description */}
             <div className="mb-6">
-              <h3 className="font-medium text-gray-700 mb-2">Description</h3>
+              <h3 className="font-medium text-gray-300 mb-2">Description</h3>
               <textarea
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full p-3 border placeholder:text-gray-600 border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 onBlur={handleSave}
@@ -158,31 +160,33 @@ export default function TaskModal({
 
             {/* Attachments */}
             <div className="mb-6">
-              <h3 className="font-medium text-gray-700 mb-2">Attachments</h3>
-              <div className="border border-dashed border-gray-300 rounded-lg p-4 text-center">
-                <svg
-                  className="w-10 h-10 text-gray-400 mx-auto mb-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                  />
-                </svg>
-                <p className="text-sm text-gray-500">
-                  Drag & drop files here, or click to browse
-                </p>
+              <h3 className="font-medium text-gray-300 mb-2">Attachments</h3>
+              <div className="border  border-gray-600 rounded-lg w-full py-2 bg-gray-900 cursor-pointer  px-2 flex items-center gap-2 text-center text-gray-500">
+                <FaPaperclip className="" />
+                <p className="text-sm text-gray-500">Add Attachment</p>
               </div>
             </div>
 
             {/* Checklist */}
             <div className="mb-6">
-              <h3 className="font-medium text-gray-700 mb-2">Checklist</h3>
+              <h3 className="font-medium text-gray-300 mb-2">Checklist</h3>
               <div className="space-y-2">
+                <div className="flex gap-2 mt-3">
+                  <input
+                    type="text"
+                    value={newChecklistItem}
+                    onChange={(e) => setNewChecklistItem(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && addChecklistItem()}
+                    className="flex-1 p-2 border placeholder:text-gray-600 border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="Add an item"
+                  />
+                  <button
+                    onClick={addChecklistItem}
+                    className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  >
+                    Add
+                  </button>
+                </div>
                 {task.checklistItems &&
                   task.checklistItems.map((item, index) => (
                     <div key={item.id} className="flex items-center gap-3">
@@ -202,22 +206,6 @@ export default function TaskModal({
                     </div>
                   ))}
               </div>
-              <div className="flex gap-2 mt-3">
-                <input
-                  type="text"
-                  value={newChecklistItem}
-                  onChange={(e) => setNewChecklistItem(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && addChecklistItem()}
-                  className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="Add an item"
-                />
-                <button
-                  onClick={addChecklistItem}
-                  className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  Add
-                </button>
-              </div>
             </div>
           </div>
 
@@ -225,44 +213,32 @@ export default function TaskModal({
           <div className="space-y-4">
             {/* Due Date */}
             <div>
-              <h3 className="font-medium text-gray-700 mb-2">Due Date</h3>
+              <h3 className="font-medium text-gray-300 mb-2">Due Date</h3>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 onBlur={handleSave}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full p-2  border placeholder:text-gray-600 border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
             </div>
 
             {/* Tags */}
-            <div>
-              <h3 className="font-medium text-gray-700 mb-2">Tags</h3>
+            <div className=" max-w-md">
+              <h3 className="font-medium text-gray-300 mb-2">Tags</h3>
               <div className="flex flex-wrap gap-2 mb-2">
                 {task.tags &&
                   task.tags.map((tag) => (
                     <div
                       key={tag.id}
-                      className={`px-2 py-1 rounded-full text-xs ${tag.color} text-white flex items-center gap-1`}
+                      className={` pl-2 py-1 rounded-md text-xs ${tag.color} text-white flex items-center justify-between gap-3`}
                     >
                       {tag.name}
                       <button
                         onClick={() => removeTag(tag.id)}
-                        className="text-white hover:text-gray-200"
+                        className="text-white text-lg hover:text-gray-400 cursor-pointer"
                       >
-                        <svg
-                          className="w-3 h-3"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
+                        <BiX />
                       </button>
                     </div>
                   ))}
@@ -273,7 +249,7 @@ export default function TaskModal({
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addTag()}
-                  className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
+                  className="flex-1 p-2 border placeholder:text-gray-600 border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
                   placeholder="Add a tag"
                 />
                 <button
@@ -297,6 +273,7 @@ export default function TaskModal({
             </div>
           </div>
         </div>
+        <div>comments goes here</div>
       </div>
     </div>
   );
