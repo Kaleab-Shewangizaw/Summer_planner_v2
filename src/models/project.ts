@@ -19,16 +19,22 @@ export interface IAttachment {
   uploadedAt: Date;
 }
 
+export interface Tag {
+  id: number;
+  name: string;
+  color: string;
+}
+
 interface Task {
   title: string;
   description?: string;
-  board: mongoose.Types.ObjectId;
+  column: number;
   position: number;
   assignees: mongoose.Types.ObjectId[];
   startDate?: Date;
   dueDate?: Date;
   isCompleted: boolean;
-  colorTags: string[];
+  colorTags: Tag[];
   checklistItems?: ChecklistItem[];
   comments: IComment[];
   attachments: IAttachment[];
@@ -91,9 +97,7 @@ const ProjectSchema: Schema = new Schema(
           type: String,
         },
         board: {
-          type: Schema.Types.ObjectId,
-          ref: "Board",
-          required: true,
+          type: Number,
         },
         position: {
           type: Number,
@@ -117,7 +121,17 @@ const ProjectSchema: Schema = new Schema(
         },
         colorTags: [
           {
-            type: String,
+            id: {
+              type: Number,
+            },
+            name: {
+              type: String,
+              required: true,
+            },
+            color: {
+              type: String,
+              required: true,
+            },
           },
         ],
         comments: [
@@ -181,8 +195,7 @@ const ProjectSchema: Schema = new Schema(
     columns: [
       {
         id: {
-          type: mongoose.Schema.Types.ObjectId,
-          default: () => new mongoose.Types.ObjectId(),
+          type: Number,
         },
         title: {
           type: String,
