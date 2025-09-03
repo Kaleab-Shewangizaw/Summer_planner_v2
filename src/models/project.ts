@@ -52,7 +52,6 @@ export interface IProject extends Document {
   title: string;
   description?: string;
   owner: mongoose.Types.ObjectId;
-  folder: mongoose.Types.ObjectId;
   tasks: Task[];
   isCompleted: boolean;
   startDate?: Date;
@@ -76,11 +75,6 @@ const ProjectSchema: Schema = new Schema(
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-    },
-    folder: {
-      type: Schema.Types.ObjectId,
-      ref: "Folder",
       required: true,
     },
     tasks: [
