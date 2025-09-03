@@ -43,7 +43,6 @@ const UserSchema: Schema = new Schema(
       {
         name: {
           type: String,
-
           required: true,
         },
         icon: {

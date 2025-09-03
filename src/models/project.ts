@@ -1,16 +1,59 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
+interface ChecklistItem {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
+export interface IComment {
+  user: mongoose.Types.ObjectId;
+  text: string;
+  createdAt: Date;
+}
+
+export interface IAttachment {
+  filename: string;
+  url: string;
+  uploadedBy: mongoose.Types.ObjectId;
+  uploadedAt: Date;
+}
+
+interface Task {
+  title: string;
+  description?: string;
+  board: mongoose.Types.ObjectId;
+  position: number;
+  assignees: mongoose.Types.ObjectId[];
+  startDate?: Date;
+  dueDate?: Date;
+  isCompleted: boolean;
+  colorTags: string[];
+  checklistItems?: ChecklistItem[];
+  comments: IComment[];
+  attachments: IAttachment[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Column {
+  id: number;
+  title: string;
+}
+
 export interface IProject extends Document {
+  id: string;
   title: string;
   description?: string;
   owner: mongoose.Types.ObjectId;
   folder: mongoose.Types.ObjectId;
+  tasks: Task[];
   isCompleted: boolean;
   startDate?: Date;
   dueDate?: Date;
   isTeamProject: boolean;
   team?: mongoose.Types.ObjectId;
-  boards: mongoose.Types.ObjectId[];
+  columns: Column[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,6 +77,89 @@ const ProjectSchema: Schema = new Schema(
       ref: "Folder",
       required: true,
     },
+    tasks: [
+      {
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: () => new mongoose.Types.ObjectId(),
+        },
+        title: {
+          type: String,
+          required: true,
+        },
+        description: {
+          type: String,
+        },
+        board: {
+          type: Schema.Types.ObjectId,
+          ref: "Board",
+          required: true,
+        },
+        position: {
+          type: Number,
+          required: true,
+        },
+        assignees: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+          },
+        ],
+        startDate: {
+          type: Date,
+        },
+        dueDate: {
+          type: Date,
+        },
+        isCompleted: {
+          type: Boolean,
+          default: false,
+        },
+        colorTags: [
+          {
+            type: String,
+          },
+        ],
+        comments: [
+          {
+            user: {
+              type: Schema.Types.ObjectId,
+              ref: "User",
+              required: true,
+            },
+            text: {
+              type: String,
+              required: true,
+            },
+            createdAt: {
+              type: Date,
+              default: Date.now,
+            },
+          },
+        ],
+        attachments: [
+          {
+            filename: {
+              type: String,
+              required: true,
+            },
+            url: {
+              type: String,
+              required: true,
+            },
+            uploadedBy: {
+              type: Schema.Types.ObjectId,
+              ref: "User",
+              required: true,
+            },
+            uploadedAt: {
+              type: Date,
+              default: Date.now,
+            },
+          },
+        ],
+      },
+    ],
     isCompleted: {
       type: Boolean,
       default: false,
@@ -52,10 +178,16 @@ const ProjectSchema: Schema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Team",
     },
-    boards: [
+    columns: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Board",
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: () => new mongoose.Types.ObjectId(),
+        },
+        title: {
+          type: String,
+          required: true,
+        },
       },
     ],
   },
