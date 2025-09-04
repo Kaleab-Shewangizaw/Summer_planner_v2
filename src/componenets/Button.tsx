@@ -38,7 +38,7 @@ export default function Button({
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
       <button
-        className={`h-full w-full px-6 py-3 rounded-md flex items-center ${boldClass} ${
+        className={`h-full w-full px-6 py-3 min-w-fit rounded-md flex items-center ${boldClass} ${
           sizeClasses[size] || sizeClasses.md
         } justify-center cursor-pointer transition-colors duration-200 ${
           fill

@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/componenets/Button";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { FaChartLine, FaCheckCircle, FaClock, FaUsers } from "react-icons/fa";
 
 export default function Features2() {
@@ -135,7 +136,9 @@ export default function Features2() {
               </h3>
               <p className="text-gray-400">Start your free trial today</p>
             </div>
-            <Button text="Get Started" fill={true} bold="bold" size="md" />
+            <Link href="/register">
+              <Button text="Get Started" fill={true} bold="bold" size="md" />
+            </Link>
           </div>
         </motion.div>
       </div>

@@ -1,10 +1,11 @@
 "use client";
 import Button from "@/componenets/Button";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden bg-[#0f161e]">
+    <section className="relative py-16 md:py-24 w-full  lg:py-32 overflow-hidden bg-[#0f161e]">
       {/* Background elements with subtle glow */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
@@ -13,7 +14,7 @@ export default function HeroSection() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-6xl mx-auto text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -47,29 +48,33 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+            className="flex flex-col sm:flex-row gap-5 sm:gap-10 md:gap-20 justify-center mb-16 "
           >
-            <Button
-              text="Get Started - It's Free"
-              fill={true}
-              bold="bold"
-              size="lg"
-              className="w-full sm:w-auto"
-            />
-            <Button
-              text="See How It Works"
-              fill={false}
-              bold="bold"
-              size="lg"
-              className="w-full sm:w-auto"
-            />
+            <Link href="/register" className="sm:w-full md:w-fit ">
+              <Button
+                text="Get Started - It's Free"
+                fill={true}
+                bold="bold"
+                size="lg"
+                className="sm:w-full  "
+              />
+            </Link>
+            <Link href="" className="w-full sm:w-full md:w-fit">
+              <Button
+                text="See How It Works"
+                fill={false}
+                bold="bold"
+                size="lg"
+                className="w-full"
+              />
+            </Link>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="relative rounded-xl shadow-2xl overflow-hidden border border-gray-800 mx-auto max-w-4xl"
+            className="relative rounded-xl shadow-2xl overflow-hidden border border-gray-800 mx-auto max-w-6xl"
           >
             <div className="aspect-video bg-gradient-to-r from-blue-900 to-purple-900 flex items-center justify-center text-white font-semibold">
               <div className="absolute inset-0 bg-black opacity-30"></div>
