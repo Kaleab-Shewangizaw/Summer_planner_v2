@@ -4,6 +4,7 @@ import NavLinks from "./NavLinks";
 import Button from "@/componenets/Button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 export default function LandingNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,7 +12,7 @@ export default function LandingNavbar() {
   return (
     <>
       <nav
-        className="w-full bg-[#0f161e]/90 backdrop-blur-md border-b border-gray-800 top-0 z-50  
+        className="w-full bg-[#0f161e]/90 backdrop-blur-md border-b border-gray-800 top-0 z-500  
     fixed     transition-all duration-300"
       >
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -20,11 +21,13 @@ export default function LandingNavbar() {
           </div>
 
           <div className="hidden lg:flex items-center space-x-8">
-            <NavLinks />
+            <NavLinks setIsMenuOpen={setIsMenuOpen} />
           </div>
 
           <div className="hidden lg:block">
-            <Button text={"Get Started"} fill={true} size="md" bold={""} />
+            <Link href="/register">
+              <Button text={"Get Started"} fill={true} size="md" bold={""} />
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -70,8 +73,15 @@ export default function LandingNavbar() {
               className="md:hidden border-t border-gray-800/50 overflow-hidden"
             >
               <div className="flex flex-col my-4 gap-4 items-center">
-                <NavLinks mobile={true} />
-                <Button text={"Get Started"} fill={true} size="md" bold={""} />
+                <NavLinks setIsMenuOpen={setIsMenuOpen} mobile={true} />
+                <Link href="/register">
+                  <Button
+                    text={"Get Started"}
+                    fill={true}
+                    size="md"
+                    bold={""}
+                  />
+                </Link>
               </div>
             </motion.div>
           )}
