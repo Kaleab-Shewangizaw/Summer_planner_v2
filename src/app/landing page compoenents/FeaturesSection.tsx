@@ -29,7 +29,7 @@ export default function FeaturesSection() {
       icon: <FaLightbulb className="text-2xl" />,
       title: "Smart Prioritization",
       description:
-        "Our AI-powered system helps you focus on what truly matters at the right time.",
+        "Our Kanban borad system helps you focus on what truly matters at the right time.",
       color: "from-green-500 to-teal-500",
     },
   ];
