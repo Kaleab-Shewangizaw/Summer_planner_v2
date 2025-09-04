@@ -1,15 +1,18 @@
 "use client";
 import Logo from "@/componenets/Logo";
 import { BsGoogle } from "react-icons/bs";
-import { FaEnvelope, FaEye, FaEyeSlash, FaUser, FaCheck } from "react-icons/fa";
+import { FaEnvelope, FaEye, FaEyeSlash, FaUser } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaLock } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [message, setMessage] = useState("");
+  const route = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,6 +20,28 @@ export default function Register() {
     confirmPassword: "",
     agreeToTerms: false,
   });
+
+  const handleRegister = async () => {
+    setMessage("");
+
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
+
+    if (res.ok) {
+      setMessage("User registered! You can now sign in.");
+      route.push("/login");
+    } else {
+      const { error } = await res.json();
+      setMessage(error || "Something went wrong.");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -87,6 +112,7 @@ export default function Register() {
           <span className="px-4 text-gray-500 text-sm font-medium">OR</span>
           <div className="flex-1 border-t border-gray-700"></div>
         </div>
+        {message && <p>{message}</p>}
 
         {/* Registration Form */}
         <div className="space-y-4">
@@ -239,6 +265,9 @@ export default function Register() {
             whileTap={{ scale: 0.98 }}
             disabled={!formData.agreeToTerms}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-3 px-4 font-semibold transition-all duration-200 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => {
+              handleRegister();
+            }}
           >
             Create Account
           </motion.button>

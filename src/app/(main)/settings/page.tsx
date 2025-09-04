@@ -1,7 +1,18 @@
+"use client";
+
 export default function SettingsPage() {
+  const handleSignout = () => {
+    alert("Sign out clicked");
+  };
   return (
     <div>
-      <h1>settings goes here</h1>
+      <button
+        onClick={() => {
+          handleSignout();
+        }}
+      >
+        Sign out
+      </button>
     </div>
   );
 }

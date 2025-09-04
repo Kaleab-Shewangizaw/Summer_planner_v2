@@ -2,11 +2,12 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+
 import bcrypt from "bcryptjs";
 import { User } from "@/models/user";
 import clientPromise from "./mongodb-client";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, auth } = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt", // use JWT-based sessions
@@ -46,7 +47,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/login",
   },
   callbacks: {
     async session({ session, token }) {
