@@ -33,6 +33,7 @@ const authConfig = {
           name: user.name,
           email: user.email,
           image: user.image || null,
+          folders: user.folders || [],
         };
       },
     }),

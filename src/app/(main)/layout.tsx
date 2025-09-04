@@ -15,9 +15,9 @@ export default function MainLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return; // wait until NextAuth checks session
+    if (status === "loading") return;
     if (!session) {
-      router.push("/"); // redirect to landing if not logged in
+      router.push("/");
     }
   }, [session, status, router]);
 
@@ -25,7 +25,8 @@ export default function MainLayout({
     return <div className="text-white">Loading...</div>;
   }
 
-  if (!session) return null; // don’t render protected UI until session check finishes
+  if (!session) return null;
+  console.log(session);
 
   return (
     <div className="h-screen max-h-screen flex flex-col">
