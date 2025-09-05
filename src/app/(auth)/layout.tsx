@@ -1,12 +1,10 @@
 "use client";
 
-import Navbar from "@/componenets/Navbar";
-import Sidebar from "@/componenets/SideBar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function MainLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -16,8 +14,8 @@ export default function MainLayout({
 
   useEffect(() => {
     if (status === "loading") return;
-    if (!session) {
-      router.push("/");
+    if (session) {
+      router.push("/tasks");
     }
   }, [session, status, router]);
 
@@ -25,16 +23,7 @@ export default function MainLayout({
     return <div className="text-white">Loading...</div>;
   }
 
-  if (!session) return null;
-  console.log(session);
+  if (session) return null;
 
-  return (
-    <div className="h-screen max-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex h-[93%] max-h-full w-screen">
-        <Sidebar />
-        {children}
-      </div>
-    </div>
-  );
+  return <>{children}</>;
 }
