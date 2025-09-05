@@ -1,3 +1,4 @@
+"use client";
 import ChosenBySection from "@/app/landing page compoenents/ChosenBySection";
 import FaqSection from "@/app/landing page compoenents/FAQSection";
 import Features2 from "@/app/landing page compoenents/Features2";
@@ -7,8 +8,26 @@ import HeroSection from "@/app/landing page compoenents/HeroSection";
 import LandingNavbar from "@/app/landing page compoenents/Navbar";
 
 import PricingSection from "@/app/landing page compoenents/PricingSection";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (session) {
+      router.push("/tasks");
+    }
+  }, [session, status, router]);
+
+  if (status === "loading") {
+    return <div className="text-white">Loading...</div>;
+  }
+
+  if (session) return null;
   return (
     <div className="w-full relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
