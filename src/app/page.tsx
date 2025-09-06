@@ -9,7 +9,7 @@ import LandingNavbar from "@/app/landing page compoenents/Navbar";
 
 import PricingSection from "@/app/landing page compoenents/PricingSection";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
