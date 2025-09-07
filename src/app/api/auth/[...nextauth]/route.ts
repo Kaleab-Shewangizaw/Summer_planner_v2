@@ -1,65 +1,45 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { compare } from "bcryptjs";
-
 import dbConnect from "@/lib/mongodb";
 import { User } from "@/models/user";
-// <-- your mongoose connection helper
+import { compare } from "bcryptjs";
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 
-// NextAuth configuration
-const authConfig = {
+export default NextAuth({
   providers: [
-    CredentialsProvider({
-      name: "Credentials",
+    Credentials({
+      id: "credentials",
+      name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: {
+          label: "Email",
+          type: "text",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+        },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials) {
         await dbConnect();
-
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing email or password");
+        if (!credentials?.password || !credentials?.email) {
+          throw new Error("Email and Password requred");
         }
-
         const user = await User.findOne({ email: credentials.email });
-        if (!user) throw new Error("No user found with this email");
-
-        const isValid = await compare(credentials.password, user.password);
-        if (!isValid) throw new Error("Invalid password");
-
-        return {
-          id: user._id?.toString(),
-          name: user.name,
-          email: user.email,
-          image: user.image || null,
-          folders: user.folders || [],
-        };
+        if (!user) {
+          throw new Error("Email doesn't exist");
+        }
+        const isCorrectPassword = await compare(
+          credentials.password,
+          user.password
+        );
+        if (!isCorrectPassword) {
+          throw new Error("Incorrect Passord");
+        }
+        return user;
       },
     }),
   ],
   pages: {
-    signIn: "/login", // where NextAuth redirects when login is required
+    signIn: "/login",
   },
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    async jwt({ token, user }: any) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }: any) {
-      if (token?.id) {
-        session.user.id = token.id;
-      }
-      return session;
-    },
-  },
-};
-
-const handler = NextAuth(authConfig);
-
-export { handler as GET, handler as POST };
+});
