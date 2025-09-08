@@ -14,32 +14,33 @@ export default function MainLayout({
 }) {
   const { data: session, status } = useSession();
   const setUser = UseUserState((state) => state.setUser);
-  const clearUser = UseUserState((state) => state.clearUser);
-  const user = UseUserState((state) => state.user);
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return;
-    if (session?.user) {
-      fetch("/api/me")
-        .then((res) => {
-          res.json();
-        })
-        .then((data) => {
-          console.log("data:", data);
-        });
-    } else {
-      router.push("/");
-    }
-  }, [session, status, router, setUser, user]);
+    const fetchUser = async () => {
+      if (status === "loading") return;
+
+      if (session?.user) {
+        try {
+          const res = await fetch("/api/user");
+          const userData = await res.json();
+          setUser(userData);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        router.push("/");
+      }
+    };
+
+    fetchUser();
+  }, [session, status, router, setUser]);
 
   if (status === "loading") {
     return <div className="text-white">Loading...</div>;
   }
 
   if (!session) return null;
-  console.log("session is here:", session);
-  console.log("user is here: ", user);
 
   return (
     <div className="h-screen max-h-screen flex flex-col">

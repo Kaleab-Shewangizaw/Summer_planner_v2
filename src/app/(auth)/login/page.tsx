@@ -2,10 +2,10 @@
 import Logo from "@/componenets/Logo";
 import { BsGoogle } from "react-icons/bs";
 import { FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import { signIn } from "next-auth/react";
 
 export default function Login() {
@@ -13,22 +13,19 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const route = useRouter();
 
-  const handleLogin = async () => {
-    setMessage("");
-    const res = await signIn("credentials", {
-      email,
-      password,
-      callbackUrl: "/tasks",
-      redirect: true,
-    });
-    if (res?.error) {
-      setMessage(res.error);
-    } else {
-      console.log("signed in");
+  const login = useCallback(async () => {
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/tasks",
+      });
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }, [email, password]);
 
   return (
     <div className="min-h-screen bg-[#0f161e] flex items-center justify-center relative overflow-hidden p-4">
@@ -138,9 +135,7 @@ export default function Login() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-3 px-4 font-semibold transition-all duration-200 hover:from-blue-700 hover:to-blue-800"
-            onClick={() => {
-              handleLogin();
-            }}
+            onClick={login}
           >
             Sign in
           </motion.button>
