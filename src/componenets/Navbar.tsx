@@ -1,6 +1,6 @@
 import { BiBell, BiSearch, BiUser } from "react-icons/bi";
 import Logo from "./Logo";
-import { UseUserState } from "@/app/(main)/store/userStore";
+import { UseUserState } from "@/app/store/authStore";
 
 export default function Navbar() {
   const user = UseUserState((state) => state.user);

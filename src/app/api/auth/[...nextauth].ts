@@ -8,6 +8,9 @@ import bcrypt from "bcryptjs";
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
+
+  // -----------------------------------------------------------
+
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -57,7 +60,7 @@ export default NextAuth({
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      if (session.user && token) {
         session.user.id = token.id as string;
       }
       return session;
