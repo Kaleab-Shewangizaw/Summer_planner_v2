@@ -9,8 +9,6 @@ import bcrypt from "bcryptjs";
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
 
-  // -----------------------------------------------------------
-
   providers: [
     CredentialsProvider({
       name: "credentials",
