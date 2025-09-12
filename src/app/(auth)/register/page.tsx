@@ -6,15 +6,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaLock } from "react-icons/fa6";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/app/store/authStore";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState("");
-  const route = useRouter();
-  const { register, error } = useAuthStore();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,13 +22,11 @@ export default function Register() {
 
   const handleRegister = async () => {
     setMessage("");
-    await register(formData.name, formData.email, formData.password);
-    if (error) {
-      setMessage(error);
-    }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: {
+    target: { name: string; value: string; type: string; checked: boolean };
+  }) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,

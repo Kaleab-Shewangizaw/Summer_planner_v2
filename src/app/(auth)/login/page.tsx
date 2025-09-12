@@ -5,21 +5,15 @@ import { FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useAuthStore } from "@/app/store/authStore";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const { login, error } = useAuthStore();
 
   const loginAction = async () => {
     setMessage("");
-    await login(email, password);
-    if (error) {
-      setMessage(error);
-    }
   };
   return (
     <div className="min-h-screen bg-[#0f161e] flex items-center justify-center relative overflow-hidden p-4">
