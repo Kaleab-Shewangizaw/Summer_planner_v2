@@ -1,9 +1,7 @@
 import { BiBell, BiSearch, BiUser } from "react-icons/bi";
 import Logo from "./Logo";
-import { UseUserState } from "@/app/store/authStore";
 
 export default function Navbar() {
-  const user = UseUserState((state) => state.user);
   return (
     <div className="w-full  py-1 relative flex items-center justify-between px-5 bg-blue-600/10 mb-1">
       {/* <div className=" w-0  rounded-full shadow-[0px_0px_300px_100px_#1447e6] absolute bottom-30  right-70 z-[-100] "></div> */}
@@ -25,11 +23,7 @@ export default function Navbar() {
         </button>
         <div className="h-8 border w-0"></div>
         <button className="p-2 rounded-full bg-black/60 cursor-pointer hover:text-gray-200 transition-all duration-100">
-          {user?.name ? (
-            user.name.charAt(0).toUpperCase()
-          ) : (
-            <BiUser className=" text-xl" />
-          )}
+          <BiUser className=" text-xl" />
         </button>
       </div>
     </div>

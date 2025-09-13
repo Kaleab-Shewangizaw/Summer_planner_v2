@@ -5,12 +5,16 @@ import { FaEnvelope, FaEye, FaEyeSlash, FaUser } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { FaLock } from "react-icons/fa6";
+import { FaLock, FaSpinner } from "react-icons/fa6";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -20,13 +24,59 @@ export default function Register() {
     agreeToTerms: false,
   });
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     setMessage("");
+    setIsLoading(true);
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setMessage("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate terms agreement
+    if (!formData.agreeToTerms) {
+      setMessage("You must agree to the terms and conditions");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await authClient.signUp.email(
+        {
+          email: formData.email, // Fixed parameter structure
+          password: formData.password,
+          name: formData.name,
+          callbackURL: "/tasks",
+        },
+        {
+          onRequest: (ctx) => {
+            console.log("requesting...", ctx);
+          },
+          onSuccess: (ctx) => {
+            console.log("success!", ctx);
+            setMessage(
+              "Registration successful! Please check your email to verify your account."
+            );
+            router.push("/tasks");
+          },
+          onError: (ctx) => {
+            setMessage(
+              ctx.error?.message || "An error occurred during registration"
+            );
+          },
+        }
+      );
+    } catch (error) {
+      setMessage(error.message || "An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleInputChange = (e: {
-    target: { name: string; value: string; type: string; checked: boolean };
-  }) => {
+  const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -95,10 +145,22 @@ export default function Register() {
           <span className="px-4 text-gray-500 text-sm font-medium">OR</span>
           <div className="flex-1 border-t border-gray-700"></div>
         </div>
-        {message && <p>{message}</p>}
+
+        {/* Message display */}
+        {message && (
+          <div
+            className={`mb-4 p-3 rounded-lg text-center ${
+              message.includes("successful")
+                ? "bg-green-900/30 text-green-400"
+                : "bg-red-900/30 text-red-400"
+            }`}
+          >
+            {message}
+          </div>
+        )}
 
         {/* Registration Form */}
-        <div className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
           {/* Name */}
           <div>
             <label className="text-gray-400 text-sm font-medium mb-2 block">
@@ -115,6 +177,7 @@ export default function Register() {
                 onChange={handleInputChange}
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your full name"
+                required
               />
             </div>
           </div>
@@ -135,6 +198,7 @@ export default function Register() {
                 onChange={handleInputChange}
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your email"
+                required
               />
             </div>
           </div>
@@ -146,7 +210,7 @@ export default function Register() {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <div className="w-4 h-4 border-2 border-gray-500 rounded-sm"></div>
+                <FaLock className="text-gray-500" />
               </div>
               <input
                 type={showPassword ? "text" : "password"}
@@ -155,8 +219,10 @@ export default function Register() {
                 onChange={handleInputChange}
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-xl py-3 pl-10 pr-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Create a password"
+                required
               />
               <button
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
@@ -198,7 +264,7 @@ export default function Register() {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <div className="w-4 h-4 border-2 border-gray-500 rounded-sm"></div>
+                <FaLock className="text-gray-500" />
               </div>
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -207,8 +273,10 @@ export default function Register() {
                 onChange={handleInputChange}
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-xl py-3 pl-10 pr-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Confirm your password"
+                required
               />
               <button
+                type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
@@ -229,6 +297,7 @@ export default function Register() {
               checked={formData.agreeToTerms}
               onChange={handleInputChange}
               className="w-4 h-4 text-blue-600 bg-gray-800 border-gray-700 rounded focus:ring-blue-500"
+              required
             />
             <label className="ml-2 text-sm text-gray-400">
               I agree to the{" "}
@@ -244,17 +313,22 @@ export default function Register() {
 
           {/* Register button */}
           <motion.button
+            type="submit"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            disabled={!formData.agreeToTerms}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-3 px-4 font-semibold transition-all duration-200 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => {
-              handleRegister();
-            }}
+            disabled={isLoading || !formData.agreeToTerms}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-3 px-4 font-semibold transition-all duration-200 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
-            Create Account
+            {isLoading ? (
+              <>
+                <FaSpinner className="animate-spin mr-2" />
+                Creating Account...
+              </>
+            ) : (
+              "Create Account"
+            )}
           </motion.button>
-        </div>
+        </form>
 
         {/* Login link */}
         <div className="text-center mt-6">
