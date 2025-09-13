@@ -1,7 +1,9 @@
 import { BiBell, BiSearch, BiUser } from "react-icons/bi";
 import Logo from "./Logo";
 
-export default function Navbar() {
+export default function Navbar({ user }) {
+  console.log(user);
+  const username = user.name;
   return (
     <div className="w-full  py-1 relative flex items-center justify-between px-5 bg-blue-600/10 mb-1">
       {/* <div className=" w-0  rounded-full shadow-[0px_0px_300px_100px_#1447e6] absolute bottom-30  right-70 z-[-100] "></div> */}
@@ -25,6 +27,7 @@ export default function Navbar() {
         <button className="p-2 rounded-full bg-black/60 cursor-pointer hover:text-gray-200 transition-all duration-100">
           <BiUser className=" text-xl" />
         </button>
+        <p>{username}</p>
       </div>
     </div>
   );

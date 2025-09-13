@@ -37,7 +37,7 @@ export default function MainLayout({
 
   return (
     <div className="h-screen max-h-screen flex flex-col">
-      <Navbar />
+      <Navbar user={session.user} />
       <div className="flex h-[93%] max-h-full w-screen">
         <Sidebar />
         {children}

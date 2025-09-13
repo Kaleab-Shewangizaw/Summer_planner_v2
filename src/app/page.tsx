@@ -8,8 +8,34 @@ import HeroSection from "@/app/landing page compoenents/HeroSection";
 import LandingNavbar from "@/app/landing page compoenents/Navbar";
 
 import PricingSection from "@/app/landing page compoenents/PricingSection";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { data: session, isPending, error } = authClient.useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      console.log("we have session");
+      router.push("/tasks");
+    }
+  }, [session, isPending, router]);
+
+  // Show loading state while checking session
+  if (isPending) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  // Don't render the protected layout if there's no session
+  if (session) {
+    return null;
+  }
   return (
     <div className="w-full relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
