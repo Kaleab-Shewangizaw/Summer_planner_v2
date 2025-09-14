@@ -1,20 +1,64 @@
 "use client";
 import Logo from "@/componenets/Logo";
 import { BsGoogle } from "react-icons/bs";
-import { FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEnvelope, FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const loginAction = async () => {
+  const loginAction = async (e) => {
+    e.preventDefault();
     setMessage("");
+    setIsLoading(true);
+
+    // Basic validation
+    if (!email || !password) {
+      setMessage("Please fill in all fields");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await authClient.signIn.email(
+        {
+          email: email,
+          password: password,
+          callbackURL: "/tasks",
+        },
+        {
+          onRequest: (ctx) => {
+            console.log("Login request initiated", ctx);
+          },
+          onSuccess: (ctx) => {
+            console.log("Login successful", ctx);
+            setMessage("Login successful! Redirecting...");
+            router.push("/tasks");
+          },
+          onError: (ctx) => {
+            setMessage(
+              ctx.error?.message ||
+                "Login failed. Please check your credentials."
+            );
+          },
+        }
+      );
+    } catch (error) {
+      setMessage(error.message || "An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <div className="min-h-screen bg-[#0f161e] flex items-center justify-center relative overflow-hidden p-4">
       {/* Background elements */}
@@ -58,10 +102,21 @@ export default function Login() {
           <div className="flex-1 border-t border-gray-700"></div>
         </div>
 
-        {message && <p>{message}</p>}
+        {/* Message display */}
+        {message && (
+          <div
+            className={`mb-4 p-3 rounded-lg text-center ${
+              message.includes("successful")
+                ? "bg-green-900/30 text-green-400"
+                : "bg-red-900/30 text-red-400"
+            }`}
+          >
+            {message}
+          </div>
+        )}
 
         {/* Email Login Form */}
-        <div className="space-y-4">
+        <form onSubmit={loginAction} className="space-y-4">
           <div>
             <label className="text-gray-400 text-sm font-medium mb-2 block">
               Email address
@@ -76,6 +131,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your email"
+                required
               />
             </div>
           </div>
@@ -94,8 +150,10 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-xl py-3 pl-10 pr-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your password"
+                required
               />
               <button
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
@@ -120,14 +178,22 @@ export default function Login() {
 
           {/* Login button */}
           <motion.button
+            type="submit"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-3 px-4 font-semibold transition-all duration-200 hover:from-blue-700 hover:to-blue-800"
-            onClick={loginAction}
+            disabled={isLoading}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl py-3 px-4 font-semibold transition-all duration-200 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
-            Sign in
+            {isLoading ? (
+              <>
+                <FaSpinner className="animate-spin mr-2" />
+                Signing in...
+              </>
+            ) : (
+              "Sign in"
+            )}
           </motion.button>
-        </div>
+        </form>
 
         {/* Sign up link */}
         <div className="text-center mt-6">

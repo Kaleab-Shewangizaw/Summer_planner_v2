@@ -1,94 +1,24 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import { User as BetterAuthUser } from "better-auth";
 
-interface Folder {
+export interface Folder {
+  id: string;
   name: string;
   icon: string;
-  isFavorite: boolean;
-  projects: mongoose.Types.ObjectId[];
+  projects: string[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  image?: string;
-  emailVerified: boolean;
-  folders?: Folder[];
-  teams: mongoose.Types.ObjectId[];
-  ownedTeams: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
+export interface TeamMembership {
+  teamId: string;
+  role: "owner" | "admn" | "member";
+  joindAt: Date;
 }
 
-const UserSchema: Schema = new Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-    },
-    emailVerified: {
-      type: Boolean,
-      default: false,
-    },
-    folders: [
-      {
-        name: {
-          type: String,
-          required: true,
-        },
-        icon: {
-          type: String,
-          required: true,
-        },
-        isFavorite: {
-          type: Boolean,
-          default: false,
-        },
-        projects: [
-          {
-            type: Schema.Types.ObjectId,
-            ref: "Project",
-          },
-        ],
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-        updatedAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
-    teams: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Team",
-      },
-    ],
-    ownedTeams: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Team",
-      },
-    ],
-  },
-  { timestamps: true }
-);
+export interface CustomUserFields {
+  folders: Folder[];
+  teams: TeamMembership[];
+  profileImage?: string;
+}
 
-export const User: Model<IUser> =
-  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+export type User = BetterAuthUser & CustomUserFields;
