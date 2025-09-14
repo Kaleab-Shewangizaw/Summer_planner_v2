@@ -11,6 +11,26 @@ export default function TasksPage() {
   const [folderName, setFolderName] = useState("");
 
   const createFolder = useFolderStore((state) => state.createFolder);
+  const addFolder = async (name: string) => {
+    fetch("/api/folder/add-folder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("http error");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Success: ", data);
+      });
+  };
 
   return (
     <div className="h-full max-h-[100%] w-full overflow-auto removeScrollBar">
@@ -62,10 +82,12 @@ export default function TasksPage() {
 
                     if (fdName.length === 0) {
                       createFolder("untitled folder");
+                      addFolder("untitled folder");
                       setAddingFolder(false);
                       setFolderName("");
                     } else {
                       createFolder(folderName);
+                      addFolder(folderName);
                       setAddingFolder(false);
                       setFolderName("");
                     }
@@ -92,10 +114,12 @@ export default function TasksPage() {
 
                     if (fdName.length === 0) {
                       createFolder("untitled folder");
+                      addFolder("untitled folder");
                       setAddingFolder(false);
                       setFolderName("");
                     } else {
                       createFolder(folderName);
+                      addFolder(folderName);
                       setAddingFolder(false);
                       setFolderName("");
                     }

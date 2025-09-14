@@ -5,6 +5,7 @@ import Sidebar from "@/componenets/SideBar";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useFolderStore } from "./tasks/Store/folderStore";
 
 export default function MainLayout({
   children,
@@ -13,6 +14,7 @@ export default function MainLayout({
 }) {
   const { data: session, isPending, error } = authClient.useSession();
   const router = useRouter();
+  // const { setFolders } = useFolderStore();
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -33,6 +35,8 @@ export default function MainLayout({
   // Don't render the protected layout if there's no session
   if (!session) {
     return null;
+  } else {
+    // setFolders(session.user.folders);
   }
 
   return (

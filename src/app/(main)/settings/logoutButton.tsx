@@ -7,7 +7,7 @@ export function LogoutButton() {
   const router = useRouter();
   return (
     <button
-      className="bg-red-600 text-white px-3 py-1 rounded"
+      className="bg-red-600 text-white px-3 py-1 rounded cursor-pointer"
       onClick={async () => {
         await authClient.signOut({
           fetchOptions: {
