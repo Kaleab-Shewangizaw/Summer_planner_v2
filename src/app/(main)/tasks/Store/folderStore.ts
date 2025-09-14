@@ -5,7 +5,8 @@ import { Column, Folder, Project } from "@/utils/types";
 type Store = {
   folders: Folder[];
   projects: Project[];
-  createFolder: (name: string) => void;
+  setFolders: (folders: Folder[]) => void;
+  createFolder: (name: string) => Promise<void>;
   deleteFolder: (id: number) => void;
   renameFolder: (id: number, name: string) => void;
   emptyFolder: (id: number) => void;
@@ -33,10 +34,32 @@ function generateId() {
 export const useFolderStore = create<Store>((set) => ({
   folders: [],
   projects: [],
-  createFolder: (name) =>
-    set((state) => ({
-      folders: [...state.folders, { id: generateId(), name, projects: [] }],
-    })),
+  setFolders: (folders) => set({ folders }),
+  createFolder: async (name) => {
+    try {
+      const response = await fetch("/api/folder/add-folder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create folder");
+      }
+
+      const data = await response.json();
+      const newFolder = { id: generateId(), name, projects: [] };
+
+      set((state) => ({
+        folders: [...state.folders, newFolder],
+      }));
+    } catch (error) {
+      console.error("Error creating folder:", error);
+      throw error;
+    }
+  },
   deleteFolder: (id) =>
     set((state) => ({
       folders: state.folders.filter((f) => f.id !== id),

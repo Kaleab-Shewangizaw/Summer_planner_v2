@@ -14,16 +14,26 @@ export default function MainLayout({
 }) {
   const { data: session, isPending, error } = authClient.useSession();
   const router = useRouter();
-  // const { setFolders } = useFolderStore();
+  const setFolders = useFolderStore((state) => state.setFolders);
+
+  useEffect(() => {
+    if (!isPending && session?.user?.folders) {
+      // Parse folders from session and set them in the store
+      const userFolders =
+        typeof session.user.folders === "string"
+          ? JSON.parse(session.user.folders)
+          : session.user.folders || [];
+
+      setFolders(userFolders);
+    }
+  }, [session, isPending, setFolders]);
 
   useEffect(() => {
     if (!isPending && !session) {
-      console.log("session is not here");
       router.push("/");
     }
   }, [session, isPending, router]);
 
-  // Show loading state while checking session
   if (isPending) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
@@ -32,11 +42,8 @@ export default function MainLayout({
     );
   }
 
-  // Don't render the protected layout if there's no session
   if (!session) {
     return null;
-  } else {
-    // setFolders(session.user.folders);
   }
 
   return (

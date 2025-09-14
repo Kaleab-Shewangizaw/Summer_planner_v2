@@ -16,22 +16,17 @@ export default function FolderCard({
   name: string;
   folder: { id: number; name: string; projects: Project[] };
 }) {
-  let na = "";
-  if (name.length > 20) {
-    for (let i = 0; i < 15; i++) {
-      na += name[i];
-    }
-  } else {
-    na = name;
-  }
   const [showOptions, setShowOptions] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState(name);
   const deleteFolder = useFolderStore((state) => state.deleteFolder);
   const emptyFolder = useFolderStore((state) => state.emptyFolder);
   const renameFolder = useFolderStore((state) => state.renameFolder);
   const optionsRef = useRef<HTMLDivElement>(null);
-  const editNameRef = useRef<HTMLInputElement>(null);
-  const [newName, setNewName] = useState(name);
-  const [editFolderName, setEditFolderName] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Truncate long names
+  const displayName = name?.length > 20 ? `${name.substring(0, 17)}...` : name;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -53,88 +48,105 @@ export default function FolderCard({
   }, [showOptions]);
 
   useEffect(() => {
-    if (editNameRef.current) {
-      editNameRef.current.focus();
-    } else {
-      setEditFolderName(false);
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
     }
-  }, [editFolderName]);
+  }, [isEditing]);
+
+  const handleRename = () => {
+    if (newName.trim()) {
+      renameFolder(folder.id, newName.trim());
+    }
+    setIsEditing(false);
+  };
+
   return (
     <div className="relative group">
-      <div
-        className="absolute top-2 right-2 hidden group-hover:block z-100 p-2 rounded-full hover:bg-black/35 cursor-pointer "
-        onClick={() => {
-          setShowOptions(!showOptions);
-        }}
+      {/* Options Button */}
+      <button
+        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-md hover:bg-gray-700/50 z-10"
+        onClick={() => setShowOptions(!showOptions)}
       >
-        {showOptions ? <PiX /> : <SlOptionsVertical className="" />}
-      </div>
+        {showOptions ? <PiX size={14} /> : <SlOptionsVertical size={14} />}
+      </button>
+
+      {/* Options Menu */}
       {showOptions && (
         <motion.div
-          className="overflow-hidden border flex flex-wrap flex-col w-30 rounded-sm border-blue-400/20 bg-[#131e3c] z-100 absolute top-8 right-1"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-10 right-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-20 min-w-[140px]"
           ref={optionsRef}
         >
           <button
-            className="hover:bg-gray-800 text-xs mt-1 cursor-pointer text-left w-full py-1 px-3 mb-1 rounded-sm transition-all duration-200"
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors"
             onClick={() => {
-              setEditFolderName(true);
+              setIsEditing(true);
               setShowOptions(false);
             }}
           >
-            Rename folder
+            Rename
           </button>
           <button
-            className="hover:bg-gray-800 text-xs mt-1 cursor-pointer text-left w-full py-1 px-3 mb-1 rounded-sm transition-all duration-200"
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors"
             onClick={() => {
-              if (
-                confirm(
-                  "Are you sure you want to delete all projects inside this folder?"
-                )
-              ) {
+              if (confirm("Are you sure you want to empty this folder?")) {
                 emptyFolder(folder.id);
               }
               setShowOptions(false);
             }}
           >
-            Empty folder
+            Empty
           </button>
-
           <button
-            className="hover:bg-gray-800 text-xs mt-1 cursor-pointer text-left w-full py-1 px-3 mb-1 rounded-sm transition-all duration-200"
+            className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 transition-colors"
             onClick={() => {
-              deleteFolder(folder.id);
+              if (confirm("Are you sure you want to delete this folder?")) {
+                deleteFolder(folder.id);
+              }
+              setShowOptions(false);
             }}
           >
-            Delete folder
+            Delete
           </button>
         </motion.div>
       )}
-      <Link
-        href={`tasks/${name}`}
-        className="border border-blue-300/10 text-gray-400 group rounded-sm w-40 py-2 px-2 hover:text-gray-100 cursor-pointer flex flex-col items-center"
-      >
-        <BiFolder className="text-7xl" />
-        {editFolderName ? (
-          <input
-            ref={editNameRef}
-            type="text"
-            className="w-full text-sm border rounded-md border-blue-900/50"
-            autoFocus
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                renameFolder(folder.id, newName);
-                setEditFolderName(false);
-              } else if (e.key === "Escape") {
-                setEditFolderName(false);
-              }
-            }}
-          />
-        ) : (
-          <p className="text-sm ">{na === name ? na : na + "..."}</p>
-        )}
-      </Link>
+
+      {/* Folder Card */}
+      <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 hover:border-gray-600 transition-colors duration-200 h-full">
+        <Link
+          href={`/tasks/${folder.id}`}
+          className="flex flex-col items-center text-center h-full"
+        >
+          <BiFolder className="text-5xl text-blue-400 mb-3" />
+
+          {isEditing ? (
+            <input
+              ref={inputRef}
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleRename();
+                if (e.key === "Escape") setIsEditing(false);
+              }}
+              className="w-full text-sm bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center focus:outline-none focus:border-blue-500"
+            />
+          ) : (
+            <>
+              <h3 className="font-medium text-gray-100 mb-1 text-sm">
+                {displayName}
+              </h3>
+              <p className="text-xs text-gray-400">
+                {folder.projects?.length || 0} project
+                {(folder.projects?.length || 0) !== 1 ? "s" : ""}
+              </p>
+            </>
+          )}
+        </Link>
+      </div>
     </div>
   );
 }

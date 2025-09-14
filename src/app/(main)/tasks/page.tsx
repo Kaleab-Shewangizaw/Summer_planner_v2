@@ -7,130 +7,133 @@ import { BiFolderPlus } from "react-icons/bi";
 
 export default function TasksPage() {
   const folders = useFolderStore((state) => state.folders);
+  const createFolder = useFolderStore((state) => state.createFolder);
   const [addingFolder, setAddingFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const createFolder = useFolderStore((state) => state.createFolder);
-  const addFolder = async (name: string) => {
-    fetch("/api/folder/add-folder", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: name,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("http error");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Success: ", data);
-      });
+  const handleAddFolder = async () => {
+    const fdName = folderName.trim() || "untitled folder";
+
+    setIsLoading(true);
+    try {
+      await createFolder(fdName);
+      setAddingFolder(false);
+      setFolderName("");
+    } catch (error) {
+      console.error("Failed to create folder:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleAddFolder();
+    } else if (e.key === "Escape") {
+      setAddingFolder(false);
+      setFolderName("");
+    }
   };
 
   return (
-    <div className="h-full max-h-[100%] w-full overflow-auto removeScrollBar">
-      <div className="border-t py-5 border-gray-700">
-        <div className="flex items-center justify-between mb-3  px-4">
-          <p className="text-gray-300 text-lg">Folders</p>
+    <div className="h-full max-h-[100%] w-full overflow-auto removeScrollBar p-6">
+      <div className="border-t border-gray-700 pt-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-100">Folders</h1>
+            <p className="text-gray-400 text-sm mt-1">
+              Organize your projects into folders
+            </p>
+          </div>
           <button
-            onClick={() => {
-              setAddingFolder(true);
-            }}
-            className="cursor-pointer bg-blue-900/50 rounded-md px-2 py-1 text-sm font-normal hover:bg-blue-900/70 transition-all duration-200 flex items-center gap-2"
+            onClick={() => setAddingFolder(true)}
+            disabled={isLoading}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <BiFolderPlus className="text-3xl text-gray-300" />
+            <BiFolderPlus className="text-lg" />
+            New Folder
           </button>
         </div>
-        <div className="flex gap-5 justify-start flex-wrap">
-          {folders.length > 0 || addingFolder ? (
-            folders.map((folder) => {
-              return (
-                <FolderCard
-                  key={folder.id}
-                  name={folder.name}
-                  folder={folder}
-                />
-              );
-            })
-          ) : (
-            <div className="flex flex-col items-center justify-center w-full h-full">
-              <h2 className="font-light text-4xl w-full mt-5 text-gray-400 text-center">
-                No folders
-              </h2>
-              <h2 className="text-gray-400">Start by creating a new folder</h2>
-            </div>
-          )}
+
+        {/* Folders Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {/* Existing folders */}
+          {folders.map((folder) => (
+            <FolderCard key={folder.id} name={folder.name} folder={folder} />
+          ))}
+
+          {/* Add Folder Card */}
           {addingFolder && (
-            <div className="w-45  flex flex-col items-end mt-3">
-              <BiFolderPlus className="text-7xl text-gray-400 self-center" />
+            <div className="bg-gray-800/50 border-2 border-dashed border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center min-h-[180px]">
+              <BiFolderPlus className="text-4xl text-gray-400 mb-4" />
               <input
                 type="text"
                 autoFocus
-                placeholder="New folder name"
-                className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none placeholder:text-gray-600"
-                onChange={(e) => {
-                  setFolderName(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const fdName = folderName.trim();
-
-                    if (fdName.length === 0) {
-                      createFolder("untitled folder");
-                      addFolder("untitled folder");
-                      setAddingFolder(false);
-                      setFolderName("");
-                    } else {
-                      createFolder(folderName);
-                      addFolder(folderName);
-                      setAddingFolder(false);
-                      setFolderName("");
-                    }
-                  } else if (e.key === "Escape") {
-                    setAddingFolder(false);
-                  }
-                }}
+                disabled={isLoading}
+                placeholder="Folder name"
+                value={folderName}
+                onChange={(e) => setFolderName(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full bg-gray-700 border border-gray-600 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500 placeholder:text-gray-500 disabled:opacity-50 text-white mb-3"
               />
-              <div className="flex">
+              <div className="flex gap-2 w-full">
                 <button
-                  className="cursor-pointer bg-[#101113] rounded-md px-3 py-1  text-sm font-normal mt-3 mx-3 "
+                  disabled={isLoading}
                   onClick={() => {
                     setAddingFolder(false);
-
                     setFolderName("");
                   }}
+                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-lg text-sm transition-colors disabled:opacity-50"
                 >
                   Cancel
-                </button>{" "}
+                </button>
                 <button
-                  className="cursor-pointer bg-[#152a6e] rounded-md px-5 py-1  text-sm font-normal mt-3 mx-3 "
-                  onClick={() => {
-                    const fdName = folderName.trim();
-
-                    if (fdName.length === 0) {
-                      createFolder("untitled folder");
-                      addFolder("untitled folder");
-                      setAddingFolder(false);
-                      setFolderName("");
-                    } else {
-                      createFolder(folderName);
-                      addFolder(folderName);
-                      setAddingFolder(false);
-                      setFolderName("");
-                    }
-                  }}
+                  disabled={isLoading || !folderName.trim()}
+                  onClick={handleAddFolder}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Add
+                  {isLoading ? "Adding..." : "Create"}
                 </button>
               </div>
             </div>
           )}
         </div>
+
+        {/* Empty State */}
+        {folders.length === 0 && !addingFolder && (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <BiFolderPlus className="text-6xl text-gray-400 mb-6" />
+            <h2 className="text-2xl font-light text-gray-300 mb-2">
+              No folders yet
+            </h2>
+            <p className="text-gray-500 mb-6 max-w-md">
+              Create your first folder to organize your projects and tasks
+            </p>
+            <button
+              onClick={() => setAddingFolder(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+            >
+              <BiFolderPlus className="text-lg" />
+              Create First Folder
+            </button>
+          </div>
+        )}
+
+        {/* Quick Stats */}
+        {folders.length > 0 && (
+          <div className="mt-8 p-4 bg-gray-800/30 rounded-lg">
+            <p className="text-sm text-gray-400">
+              {folders.length} folder{folders.length !== 1 ? "s" : ""} • Total
+              projects:{" "}
+              {folders.reduce(
+                (acc, folder) => acc + (folder.projects?.length || 0),
+                0
+              )}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
