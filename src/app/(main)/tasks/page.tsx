@@ -13,7 +13,18 @@ export default function TasksPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddFolder = async () => {
-    const fdName = folderName.trim() || "untitled folder";
+    const fdName = folderName.trim();
+
+    //check if there is another folder with the same name if there is one change the name to (name) (1) (2) ... but if its empty name it change it to Untitled (1) (2) ...
+    if (folders.find((f) => f.name === fdName)) {
+      let counter = 1;
+      let newName = fdName || "Untitled";
+      while (folders.find((f) => f.name === `${newName} (${counter})`)) {
+        counter++;
+      }
+      setFolderName(`${newName} (${counter})`);
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -37,12 +48,12 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="h-full max-h-[100%] w-full overflow-auto removeScrollBar p-6">
+    <div className="h-full max-h-[100%] w-full overflow-auto px-2">
       <div className="border-t border-gray-700 pt-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-100">Folders</h1>
+            <h1 className="text-2xl font-semibold text-gray-100">My Folders</h1>
             <p className="text-gray-400 text-sm mt-1">
               Organize your projects into folders
             </p>
@@ -58,7 +69,7 @@ export default function TasksPage() {
         </div>
 
         {/* Folders Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 ">
           {/* Existing folders */}
           {folders.map((folder) => (
             <FolderCard key={folder.id} name={folder.name} folder={folder} />

@@ -1,4 +1,3 @@
-// api/folder/add-folder/route.tsx
 import { auth } from "@/lib/auth";
 import { Folder } from "@/models/user";
 import { v4 as uuidv4 } from "uuid";
@@ -19,7 +18,11 @@ export async function POST(req: Request) {
         ? JSON.parse(session.user.folders)
         : ((session.user.folders || []) as Folder[]);
 
-    const newFolder = { id: uuidv4(), name: name || "untitled folder" };
+    const newFolder = {
+      id: uuidv4(),
+      name: name || "untitled folder",
+      projects: [],
+    };
     const updatedFolders = [...folders, newFolder];
 
     const updatedUser = await auth.api.updateUser({
@@ -29,12 +32,11 @@ export async function POST(req: Request) {
       headers: headers(),
     });
 
-    // Return the new folder data
     return NextResponse.json(
       {
         success: true,
         folder: newFolder,
-        user: updatedUser,
+        folders: updatedFolders,
       },
       { status: 200 }
     );
