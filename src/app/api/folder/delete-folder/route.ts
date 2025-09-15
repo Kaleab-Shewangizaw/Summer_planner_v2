@@ -32,9 +32,10 @@ export async function DELETE(req: Request) {
         { status: 404 }
       );
     }
+
     const updatedFolders = folders.filter((folder) => folder.id !== folderId);
 
-    const updatedUser = await auth.api.updateUser({
+    await auth.api.updateUser({
       body: {
         folders: updatedFolders,
       },
@@ -46,8 +47,7 @@ export async function DELETE(req: Request) {
         success: true,
         message: "Folder deleted successfully",
         deletedFolderId: folderId,
-        remainingFolders: updatedFolders.length,
-        user: updatedUser,
+        folders: updatedFolders,
       },
       { status: 200 }
     );
