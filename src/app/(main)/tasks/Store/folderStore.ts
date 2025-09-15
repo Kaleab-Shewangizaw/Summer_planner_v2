@@ -46,11 +46,8 @@ export const useFolderStore = create<Store>((set, get) => ({
       if (!response.ok) throw new Error("Failed to create folder");
 
       const data = await response.json();
-      const newFolder = { id: generateId(), name, projects: [] };
 
-      set((state) => ({
-        folders: [...state.folders, newFolder],
-      }));
+      set({ folders: data.folders });
     } catch (error) {
       console.error("Error creating folder:", error);
       throw error;
@@ -67,10 +64,12 @@ export const useFolderStore = create<Store>((set, get) => ({
 
       if (!response.ok) throw new Error("Failed to delete folder");
 
-      set((state) => ({
-        folders: state.folders.filter((f) => f.id !== id),
-        projects: state.projects.filter((p) => p.folderId !== id),
-      }));
+      const data = await response.json();
+
+      set({
+        folders: data.folders,
+        projects: get().projects.filter((p) => p.folderId !== id),
+      });
     } catch (error) {
       console.error("Error deleting folder:", error);
       throw error;
