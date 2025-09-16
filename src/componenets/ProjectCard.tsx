@@ -1,98 +1,88 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { GrTask } from "react-icons/gr";
+import { FaTasks } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
-import { Project } from "@/utils/types";
+import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { PiX } from "react-icons/pi";
 
-interface ProjectCardProps {
+export default function ProjectCard({
+  name,
+  project,
+}: {
   name: string;
-  project: Project;
-}
-
-export default function ProjectCard({ name, project }: ProjectCardProps) {
+  project: { id: number; name: string; description?: string };
+}) {
   const [showOptions, setShowOptions] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const path = usePathname();
-  const link = `${path}/${encodeURIComponent(name)}`;
+  const optionsRef = useRef<HTMLDivElement>(null);
 
-  // Truncate name if needed
-  const displayName = name.length > 22 ? name.slice(0, 20) + "..." : name;
+  const displayName = name.length > 20 ? `${name.substring(0, 17)}...` : name;
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        optionsRef.current &&
+        !optionsRef.current.contains(event.target as Node)
+      ) {
         setShowOptions(false);
       }
+    }
+
+    if (showOptions) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-    if (showOptions) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showOptions]);
 
   return (
-    <div className="relative group bg-[#131e3c] border border-blue-300/10 rounded-xl p-4 w-full sm:w-64 md:w-72 shadow hover:shadow-blue-300/10 transition">
+    <div className="relative group">
       {/* Options Button */}
-      <div className="absolute top-3 right-3 z-30">
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowOptions((prev) => !prev);
-          }}
-          className="p-1.5 rounded-full hover:bg-white/10 cursor-pointer"
-        >
-          <SlOptionsVertical className="text-gray-300 text-sm" />
-        </div>
-
-        {/* Dropdown Menu */}
-        <AnimatePresence>
-          {showOptions && (
-            <motion.div
-              ref={menuRef}
-              initial={{ opacity: 0, scale: 0.95, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -10 }}
-              transition={{ duration: 0.15 }}
-              className="absolute right-0 mt-2 bg-[#1f2a48] border border-blue-400/20 rounded-md w-36 shadow-md z-50 overflow-hidden"
-            >
-              {["Rename", "Move", "Delete"].map((option) => (
-                <button
-                  key={option}
-                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-800 transition ${
-                    option === "Delete" ? "text-red-400" : "text-white"
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Card Link */}
-      <Link
-        href={link}
-        className="flex flex-col h-full text-gray-300 hover:text-white transition-all"
+      <button
+        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-md hover:bg-gray-700/50 z-10"
+        onClick={() => setShowOptions(!showOptions)}
       >
-        <GrTask className="text-4xl text-blue-400 mb-4 mx-auto" />
-        <h2 className="text-lg font-semibold text-center mb-2">
-          {displayName}
-        </h2>
-        <p className="text-xs text-gray-400 text-center line-clamp-2 mb-3">
-          {project.description
-            ? project.description
-            : "no description provided"}
-        </p>
+        {showOptions ? <PiX size={14} /> : <SlOptionsVertical size={14} />}
+      </button>
 
-        {/* Metadata row */}
-        <div className="flex justify-between items-center text-xs text-gray-500 mt-auto">
-          <span className="px-2 py-0.5 rounded-full bg-blue-800/40 text-blue-300 capitalize">
-            {status}
-          </span>
-          <span className="italic"></span>
+      {/* Options Menu */}
+      {showOptions && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-10 right-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-20 min-w-[140px]"
+          ref={optionsRef}
+        >
+          <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors">
+            Edit
+          </button>
+          <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors">
+            Duplicate
+          </button>
+          <button className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 transition-colors">
+            Delete
+          </button>
+        </motion.div>
+      )}
+
+      {/* Project Card */}
+      <Link
+        href={`/tasks/project/${project.id}`}
+        className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 hover:border-gray-600 transition-colors duration-200 block h-full"
+      >
+        <div className="flex flex-col items-center text-center h-full">
+          <FaTasks className="text-4xl text-blue-400 mb-3" />
+          <h3 className="font-medium text-gray-100 mb-1 text-sm">
+            {displayName}
+          </h3>
+          {project.description && (
+            <p className="text-xs text-gray-400 mt-1 line-clamp-2">
+              {project.description}
+            </p>
+          )}
         </div>
       </Link>
     </div>

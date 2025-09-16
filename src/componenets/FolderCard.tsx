@@ -158,7 +158,7 @@ export default function FolderCard({
       {/* Folder Card */}
       <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 hover:border-gray-600 transition-colors duration-200 h-full">
         <Link
-          href={`/tasks/${folder.id}`}
+          href={`/tasks/${folder.name}`}
           className="flex flex-col items-center text-center h-full"
         >
           <BiFolder className="text-5xl text-blue-400 mb-3" />

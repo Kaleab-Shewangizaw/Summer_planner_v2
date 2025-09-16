@@ -4,92 +4,84 @@ import { useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { useFolderStore } from "../Store/folderStore";
 import { usePathname } from "next/navigation";
-import { FaTasks } from "react-icons/fa";
+import AddProjectModal from "./[project]/addProjectModal";
 
 export default function FolderPage() {
-  const [addingProject, setAddingProject] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const folders = useFolderStore((state) => state.folders);
   const projects = useFolderStore((state) => state.projects);
   const realPath = usePathname();
-  const [projectName, setProjectName] = useState("");
 
   const path = realPath.split("/")[2].split("%20").join(" ");
-  const folder = folders.filter((f) => f.name === path)[0];
+  const folder = folders.find((f) => f.name === path);
   const folderId = folder?.id;
-  const addProject = useFolderStore((state) => state.addProject);
 
-  function generateId() {
-    return Math.floor(Math.random() * 10001);
-  }
+  const folderProjects = projects.filter((p) => p.folderId === folderId);
+
   return (
-    <div className=" h-full max-h-[100%] mb-20   w-full  overflow-auto removeScrollBar ">
-      <div className=" py-5 border-gray-700 border-t">
-        <div className="flex items-center justify-between mb-3  px-4">
-          <p className="text-gray-300 text-lg">Projects</p>
+    <div className="h-full max-h-[100%] mb-20 w-full overflow-auto removeScrollBar">
+      <div className="py-5 border-gray-700 border-t">
+        <div className="flex items-center justify-between mb-6 px-6">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-100">
+              {folder?.name || "Projects"}
+            </h1>
+            <p className="text-gray-400 text-sm mt-1">
+              {folderProjects.length} project
+              {folderProjects.length !== 1 ? "s" : ""} in this folder
+            </p>
+          </div>
           <button
-            onClick={() => {
-              setAddingProject(true);
-            }}
-            className="cursor-pointer bg-blue-900/50 rounded-md px-2 py-1 text-sm font-normal hover:bg-blue-900/70 transition-all duration-200 flex items-center gap-1"
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
           >
-            <BiPlus className="text-xl text-gray-300" /> New Project
+            <BiPlus className="text-lg" />
+            New Project
           </button>
         </div>
-        <div className="flex gap-5 justify-start px-auto flex-wrap  px-2">
-          {projects.filter((p) => p.folderId == folderId).length > 0 ||
-          addingProject ? (
-            projects
-              .filter((p) => p.folderId == folderId)
-              .map((p) => {
-                return <ProjectCard key={p.id} name={p.name} project={p} />;
-              })
-          ) : (
-            <div className="flex flex-col items-center justify-center w-full h-full">
-              <h2 className="font-light text-4xl w-full mt-5 text-gray-400 text-center">
-                No Projects
-              </h2>
-              <h2 className="text-gray-400">
-                Add project by clicking <i>+ New project</i> button.
-              </h2>
-            </div>
-          )}
 
-          {addingProject && (
-            <div className="w-40 flex flex-col items-end mt-3">
-              <FaTasks className="text-7xl text-gray-400 self-center" />
-              <input
-                type="text"
-                autoFocus
-                placeholder="New Project name"
-                className="w-full border border-blue-900/50 px-2 py-2 font-normal focus:outline-0 focus:border-none placeholder:text-gray-600"
-                onChange={(e) => {
-                  setProjectName(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    addProject(folderId, projectName, generateId(), "", []);
-                    setAddingProject(false);
-                  } else if (e.key === "Escape") {
-                    setAddingProject(false);
-                  }
-                }}
-              />
-              <button
-                className="cursor-pointer bg-[#152a6e] rounded-md px-2 py-1 text-sm font-normal mt-3"
-                onClick={() => {
-                  if (projectName.trim().length === 0) {
-                    return;
-                  }
-                  addProject(folderId, projectName, generateId(), "", []);
-                  setAddingProject(false);
-                }}
-              >
-                Add
-              </button>
-            </div>
-          )}
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-6">
+          {folderProjects.map((project) => (
+            <ProjectCard
+              key={project.id}
+              name={project.name}
+              project={project}
+            />
+          ))}
         </div>
+
+        {/* Empty State */}
+        {folderProjects.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-24 h-24 bg-gray-800/50 rounded-full flex items-center justify-center mb-6">
+              <BiPlus className="text-4xl text-gray-400" />
+            </div>
+            <h2 className="text-2xl font-light text-gray-300 mb-2">
+              No Projects Yet
+            </h2>
+            <p className="text-gray-500 mb-6 max-w-md">
+              Get started by creating your first project in this folder
+            </p>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+            >
+              <BiPlus className="text-lg" />
+              Create First Project
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Add Project Modal */}
+      {isModalOpen && (
+        <AddProjectModal
+          folderId={folderId}
+          folderName={folder?.name || ""}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
