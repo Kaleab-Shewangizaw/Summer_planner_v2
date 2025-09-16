@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     const newFolder = {
       id: uuidv4(),
-      name: name || "untitled folder",
+      name: name,
       projects: [],
     };
     const updatedFolders = [...folders, newFolder];

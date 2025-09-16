@@ -14,8 +14,10 @@ export default function TasksPage() {
 
   const handleAddFolder = async () => {
     const fdName = folderName.trim();
+    if (!fdName) return;
 
-    //check if there is another folder with the same name if there is one change the name to (name) (1) (2) ... but if its empty name it change it to Untitled (1) (2) ...
+    // Ensure unique folder names
+
     if (folders.find((f) => f.name === fdName)) {
       let counter = 1;
       let newName = fdName || "Untitled";
