@@ -80,7 +80,9 @@ export default function ProjectCard({
           </h3>
           {project.description && (
             <p className="text-xs text-gray-400 mt-1 line-clamp-2">
-              {project.description}
+              {project.description.trim() !== ""
+                ? project.description
+                : "No description provided."}
             </p>
           )}
         </div>

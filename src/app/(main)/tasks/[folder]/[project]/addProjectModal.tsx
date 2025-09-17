@@ -5,12 +5,16 @@ import { BiPlus, BiX } from "react-icons/bi";
 import { useFolderStore } from "@/app/(main)/tasks/Store/folderStore";
 
 interface AddProjectModalProps {
-  folderId: number;
+  folderId: number | string;
   folderName: string;
   onClose: () => void;
 }
 
-export default function AddProjectModal({ folderId, folderName, onClose }: AddProjectModalProps) {
+export default function AddProjectModal({
+  folderId,
+  folderName,
+  onClose,
+}: AddProjectModalProps) {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +22,7 @@ export default function AddProjectModal({ folderId, folderName, onClose }: AddPr
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!projectName.trim() || !folderId) return;
 
     setIsLoading(true);
@@ -43,7 +47,7 @@ export default function AddProjectModal({ folderId, folderName, onClose }: AddPr
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50"
       onClick={onClose}
     >
@@ -54,7 +58,9 @@ export default function AddProjectModal({ folderId, folderName, onClose }: AddPr
         {/* Header */}
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
           <div>
-            <h2 className="text-xl font-semibold text-gray-100">Create New Project</h2>
+            <h2 className="text-xl font-semibold text-gray-100">
+              Create New Project
+            </h2>
             <p className="text-sm text-gray-400 mt-1">
               Add to: <span className="text-blue-400">{folderName}</span>
             </p>
@@ -71,7 +77,10 @@ export default function AddProjectModal({ folderId, folderName, onClose }: AddPr
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Project Name */}
           <div>
-            <label htmlFor="projectName" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="projectName"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Project Name *
             </label>
             <input
@@ -90,7 +99,10 @@ export default function AddProjectModal({ folderId, folderName, onClose }: AddPr
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Description
             </label>
             <textarea
@@ -112,16 +124,32 @@ export default function AddProjectModal({ folderId, folderName, onClose }: AddPr
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
-                { name: "Blank", desc: "Start from scratch", color: "bg-gray-600" },
-                { name: "Task Board", desc: "Columns for tasks", color: "bg-blue-600" },
-                { name: "Calendar", desc: "Time-based planning", color: "bg-green-600" }
+                {
+                  name: "Blank",
+                  desc: "Start from scratch",
+                  color: "bg-gray-600",
+                },
+                {
+                  name: "Task Board",
+                  desc: "Columns for tasks",
+                  color: "bg-blue-600",
+                },
+                {
+                  name: "Calendar",
+                  desc: "Time-based planning",
+                  color: "bg-green-600",
+                },
               ].map((template) => (
                 <div
                   key={template.name}
                   className="border border-gray-600 rounded-lg p-3 cursor-pointer hover:border-gray-500 transition-colors duration-200 group"
                 >
-                  <div className={`w-8 h-8 ${template.color} rounded-md mb-2 group-hover:opacity-90`} />
-                  <h4 className="text-sm font-medium text-gray-100">{template.name}</h4>
+                  <div
+                    className={`w-8 h-8 ${template.color} rounded-md mb-2 group-hover:opacity-90`}
+                  />
+                  <h4 className="text-sm font-medium text-gray-100">
+                    {template.name}
+                  </h4>
                   <p className="text-xs text-gray-400 mt-1">{template.desc}</p>
                 </div>
               ))}

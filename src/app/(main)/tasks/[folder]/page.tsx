@@ -9,14 +9,15 @@ import AddProjectModal from "./[project]/addProjectModal";
 export default function FolderPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const folders = useFolderStore((state) => state.folders);
-  const projects = useFolderStore((state) => state.projects);
+
   const realPath = usePathname();
 
   const path = realPath.split("/")[2].split("%20").join(" ");
   const folder = folders.find((f) => f.name === path);
   const folderId = folder?.id;
 
-  const folderProjects = projects.filter((p) => p.folderId === folderId);
+  // const folderProjects = projects.filter((p) => p.folderId === folderId);
+  const folderProjects = folder?.projects;
 
   return (
     <div className="h-full max-h-[100%] mb-20 w-full overflow-auto removeScrollBar">
@@ -27,8 +28,8 @@ export default function FolderPage() {
               {folder?.name || "Projects"}
             </h1>
             <p className="text-gray-400 text-sm mt-1">
-              {folderProjects.length} project
-              {folderProjects.length !== 1 ? "s" : ""} in this folder
+              {folderProjects?.length} project
+              {folderProjects?.length !== 1 ? "s" : ""} in this folder
             </p>
           </div>
           <button
@@ -42,7 +43,7 @@ export default function FolderPage() {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-6">
-          {folderProjects.map((project) => (
+          {folderProjects?.map((project) => (
             <ProjectCard
               key={project.id}
               name={project.name}
@@ -52,7 +53,7 @@ export default function FolderPage() {
         </div>
 
         {/* Empty State */}
-        {folderProjects.length === 0 && (
+        {folderProjects?.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-24 h-24 bg-gray-800/50 rounded-full flex items-center justify-center mb-6">
               <BiPlus className="text-4xl text-gray-400" />
