@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { FaTasks } from "react-icons/fa";
-import { SlOptionsVertical } from "react-icons/sl";
-import { motion } from "framer-motion";
+import { FaTasks, FaCalendarAlt, FaUser, FaFlag } from "react-icons/fa";
+
 import { useState, useRef, useEffect } from "react";
-import { PiX } from "react-icons/pi";
 
 export default function ProjectCard({
   name,
@@ -17,7 +15,27 @@ export default function ProjectCard({
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef<HTMLDivElement>(null);
 
-  const displayName = name.length > 20 ? `${name.substring(0, 17)}...` : name;
+  // Generate random project management data for demo purposes
+
+  const randomDueDate = new Date();
+  randomDueDate.setDate(
+    randomDueDate.getDate() + Math.floor(Math.random() * 30)
+  );
+  const formattedDueDate = randomDueDate.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+
+  const priorityOptions = ["High", "Medium", "Low"];
+  const randomPriority = priorityOptions[Math.floor(Math.random() * 3)];
+  const priorityColor =
+    randomPriority === "High"
+      ? "text-red-400"
+      : randomPriority === "Medium"
+      ? "text-yellow-400"
+      : "text-green-400";
+
+  const teamMembers = Math.floor(Math.random() * 5) + 1;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -39,54 +57,50 @@ export default function ProjectCard({
   }, [showOptions]);
 
   return (
-    <div className="relative group">
-      {/* Options Button */}
-      <button
-        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-md hover:bg-gray-700/50 z-10"
-        onClick={() => setShowOptions(!showOptions)}
-      >
-        {showOptions ? <PiX size={14} /> : <SlOptionsVertical size={14} />}
-      </button>
+    <div className="relative group bg-gray-800/50 border border-gray-700 rounded-lg py-4 px-2 hover:border-gray-600 transition-colors duration-200 h-full flex flex-col">
+      <div className="flex-grow block">
+        <div className="flex flex-col h-full">
+          <div className="flex justify-between items-center ">
+            <div className="flex items-center gap-3 mb-3 ">
+              <FaTasks className="text-gray-400 text-md" />
 
-      {/* Options Menu */}
-      {showOptions && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-10 right-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-20 min-w-[140px]"
-          ref={optionsRef}
-        >
-          <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors">
-            Edit
-          </button>
-          <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors">
-            Duplicate
-          </button>
-          <button className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 transition-colors">
-            Delete
-          </button>
-        </motion.div>
-      )}
-
-      {/* Project Card */}
-      <Link
-        href={`/tasks/project/${project.id}`}
-        className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 hover:border-gray-600 transition-colors duration-200 block h-full"
-      >
-        <div className="flex flex-col items-center text-center h-full">
-          <FaTasks className="text-4xl text-blue-400 mb-3" />
-          <h3 className="font-medium text-gray-100 mb-1 text-sm">
-            {displayName}
-          </h3>
+              <Link href={`/tasks/project/${project.id}`}>
+                <h3 className="font-semibold text-blue-400 text-md truncate  hover:underline">
+                  {name}
+                </h3>
+              </Link>
+              <div className="px-2 py-0.5 rounded-full text-gray-500 border text-xs">
+                <h3>{teamMembers % 2 ? "Team" : "Private"}</h3>
+              </div>
+            </div>
+            <div className="flex items-center text-xs gap-2 text-gray-400">
+              <FaFlag className={`text-sm ${priorityColor}`} />
+              <span>{randomPriority}</span>
+            </div>
+          </div>
           {project.description && (
-            <p className="text-xs text-gray-400 mt-1 line-clamp-2">
+            <p className="text-sm text-gray-400 mb-4 line-clamp-2">
               {project.description.trim() !== ""
                 ? project.description
                 : "No description provided."}
             </p>
           )}
+
+          <div className="mt-auto flex justify-between text-xs text-gray-500">
+            <div className="flex items-center">
+              <FaCalendarAlt className="mr-1.5" />
+              <span>{formattedDueDate}</span>
+            </div>
+
+            <div className="flex items-center">
+              <FaUser className="mr-1.5" />
+              <span>
+                {teamMembers} member{teamMembers !== 1 ? "s" : ""}
+              </span>
+            </div>
+          </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }

@@ -16,7 +16,6 @@ export default function FolderPage() {
   const folder = folders.find((f) => f.name === path);
   const folderId = folder?.id;
 
-  // const folderProjects = projects.filter((p) => p.folderId === folderId);
   const folderProjects = folder?.projects;
 
   return (
@@ -34,15 +33,15 @@ export default function FolderPage() {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-200"
           >
             <BiPlus className="text-lg" />
             New Project
           </button>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-6">
+        {/* Projects Grid - Adjusted gap for better spacing */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-6">
           {folderProjects?.map((project) => (
             <ProjectCard
               key={project.id}
@@ -66,7 +65,7 @@ export default function FolderPage() {
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors duration-200 flex items-center gap-2"
             >
               <BiPlus className="text-lg" />
               Create First Project
