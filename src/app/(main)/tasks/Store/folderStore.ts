@@ -4,16 +4,20 @@ import { Column, Folder, Project } from "@/utils/types";
 type Store = {
   folders: Folder[];
   projects: Project[];
+  session: any;
   setFolders: (folders: Folder[]) => void;
+  setSession: (session: any) => void;
   createFolder: (name: string) => Promise<void>;
   deleteFolder: (id: number) => Promise<void>;
   renameFolder: (id: number, name: string) => Promise<void>;
   emptyFolder: (id: number) => Promise<void>;
   addProject: (
-    folderId: number,
     name: string,
     description: string,
-    columns: Column[]
+    priority: "high" | "medium" | "low",
+    folderName: string,
+    ownerId: string,
+    teamId?: string
   ) => Promise<void>;
   deleteProject: (folderId: number, projectId: number) => Promise<void>;
   updateProject: (
@@ -25,15 +29,13 @@ type Store = {
   ) => Promise<void>;
 };
 
-function generateId() {
-  return Math.floor(Math.random() * 10001);
-}
-
 export const useFolderStore = create<Store>((set, get) => ({
   folders: [],
   projects: [],
+  session: null,
 
   setFolders: (folders) => set({ folders }),
+  setSession: (session) => set({ session }),
 
   createFolder: async (name) => {
     try {
@@ -97,12 +99,10 @@ export const useFolderStore = create<Store>((set, get) => ({
 
   emptyFolder: async (id: number) => {
     try {
-      // First update local state for immediate feedback
       set((state) => ({
         projects: state.projects.filter((p) => p.folderId !== id),
       }));
 
-      // Then sync with server (you might want to create an empty-folder endpoint)
       const response = await fetch("/api/folder/empty-folder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,39 +116,43 @@ export const useFolderStore = create<Store>((set, get) => ({
     }
   },
 
-  addProject: async (
-    folderId: number,
-    name: string,
-    description: string,
-    columns: Column[]
-  ) => {
+  addProject: async (name, description, priority, folderName, teamId) => {
     try {
       const response = await fetch("/api/project/add-project", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ folderId, name, description, columns }),
+        body: JSON.stringify({
+          name,
+          description,
+          priority,
+          folderName,
+          teamId: teamId || undefined,
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to add project");
 
       const data = await response.json();
-      const newProject = {
-        id: generateId(),
-        folderId,
-        name,
-        description,
-        columns,
-      };
 
-      set((state) => ({
-        projects: [...state.projects, newProject],
-      }));
+      if (data.success) {
+        set((state) => ({
+          folders: state.folders.map((folder) =>
+            folder.name === folderName
+              ? {
+                  ...folder,
+                  projects: [...(folder.projects || []), data.project],
+                }
+              : folder
+          ),
+        }));
+      }
+
+      return data;
     } catch (error) {
       console.error("Error adding project:", error);
       throw error;
     }
   },
-
   deleteProject: async (folderId: number, projectId: number) => {
     try {
       const response = await fetch("/api/project/delete-project", {

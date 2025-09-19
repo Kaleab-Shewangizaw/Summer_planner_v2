@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BiPlus, BiX } from "react-icons/bi";
+import { BiFlag, BiPlus, BiSolidFlag, BiX } from "react-icons/bi";
 import { useFolderStore } from "@/app/(main)/tasks/Store/folderStore";
 
 interface AddProjectModalProps {
@@ -18,7 +18,12 @@ export default function AddProjectModal({
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [priority, setPriority] = useState("high");
+  const [team, setTeam] = useState("");
+
   const addProject = useFolderStore((state) => state.addProject);
+  const session = useFolderStore((state) => state.session);
+  const ownerId = session.user.id;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +32,14 @@ export default function AddProjectModal({
 
     setIsLoading(true);
     try {
-      await addProject(folderId, projectName.trim(), description.trim(), []);
+      await addProject(
+        projectName.trim(),
+        description.trim(),
+        priority,
+        folderName,
+        team.trim() ? team : undefined,
+        ownerId
+      );
       setProjectName("");
       setDescription("");
       onClose();
@@ -117,40 +129,50 @@ export default function AddProjectModal({
             />
           </div>
 
-          {/* Template Options (Optional) */}
+          {/* Priority */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-3">
-              Template (Optional)
+              priority
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 {
-                  name: "Blank",
-                  desc: "Start from scratch",
-                  color: "bg-gray-600",
+                  name: "high",
+                  color: "red-600",
                 },
                 {
-                  name: "Task Board",
-                  desc: "Columns for tasks",
-                  color: "bg-blue-600",
+                  name: "medium",
+                  color: "yellow-600",
                 },
                 {
-                  name: "Calendar",
-                  desc: "Time-based planning",
-                  color: "bg-green-600",
+                  name: "low",
+                  color: "green-600",
                 },
-              ].map((template) => (
+              ].map((p) => (
                 <div
-                  key={template.name}
-                  className="border border-gray-600 rounded-lg p-3 cursor-pointer hover:border-gray-500 transition-colors duration-200 group"
+                  key={p.name}
+                  className={`  rounded-lg p-3 cursor-pointer transition-colors duration-200 group ${
+                    priority === p.name
+                      ? `border-5 border-blue-500 `
+                      : "border border-gray-600"
+                  }`}
+                  onClick={() => {
+                    setPriority(p.name);
+                  }}
                 >
-                  <div
-                    className={`w-8 h-8 ${template.color} rounded-md mb-2 group-hover:opacity-90`}
+                  <BiSolidFlag
+                    className={`text-lg ${
+                      p.name === "high"
+                        ? "text-red-600"
+                        : p.name === "medium"
+                        ? "text-yellow-600"
+                        : "text-green-600"
+                    } rounded-md mb-2 group-hover:opacity-90`}
                   />
+
                   <h4 className="text-sm font-medium text-gray-100">
-                    {template.name}
+                    {p.name}
                   </h4>
-                  <p className="text-xs text-gray-400 mt-1">{template.desc}</p>
                 </div>
               ))}
             </div>
@@ -186,10 +208,9 @@ export default function AddProjectModal({
           </div>
         </form>
 
-        {/* Keyboard Shortcut Hint */}
         <div className="mt-4 pt-4 border-t border-gray-700">
           <p className="text-xs text-gray-500 text-center">
-            Press ⌘ + Enter to create • Esc to cancel
+            Press Enter to create • Esc to cancel
           </p>
         </div>
       </div>

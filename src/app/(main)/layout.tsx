@@ -15,10 +15,11 @@ export default function MainLayout({
   const { data: session, isPending, error } = authClient.useSession();
   const router = useRouter();
   const setFolders = useFolderStore((state) => state.setFolders);
+  const setSession = useFolderStore((state) => state.setSession);
 
   useEffect(() => {
+    setSession(session);
     if (!isPending && session?.user?.folders) {
-      // Parse folders from session and set them in the store
       const userFolders =
         typeof session.user.folders === "string"
           ? JSON.parse(session.user.folders)
@@ -26,7 +27,7 @@ export default function MainLayout({
 
       setFolders(userFolders);
     }
-  }, [session, isPending, setFolders]);
+  }, [session, isPending, setFolders, setSession]);
 
   useEffect(() => {
     if (!isPending && !session) {

@@ -51,13 +51,14 @@ export interface IProject extends Document {
   id: string;
   title: string;
   description?: string;
-  owner: mongoose.Types.ObjectId;
-  tasks: Task[];
+  priority: "high" | "medium" | "low";
+  owner: string;
+  tasks?: Task[];
   isCompleted: boolean;
   startDate?: Date;
   dueDate?: Date;
   isTeamProject: boolean;
-  team?: mongoose.Types.ObjectId;
+  team?: string;
   columns: Column[];
   createdAt: Date;
   updatedAt: Date;
@@ -70,6 +71,9 @@ const ProjectSchema: Schema = new Schema(
       required: true,
     },
     description: {
+      type: String,
+    },
+    prority: {
       type: String,
     },
     owner: {

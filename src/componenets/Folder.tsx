@@ -109,10 +109,10 @@ export default function SideFolderComponent({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-10 right-3 z-50 w-40 rounded-md bg-[#131e3c] border border-blue-400/20 shadow-lg p-1 text-sm"
+            className="absolute top-10 right-3 z-50 w-40 rounded-md bg-[#131e3c] border border-blue-400/20 shadow-lg text-xs overflow-hidden"
           >
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
+              className="w-full text-left py-2 px-3 hover:bg-gray-600"
               onClick={() => {
                 setAddingProject(true);
                 setShowOptions(false);
@@ -121,13 +121,13 @@ export default function SideFolderComponent({
               + New Project
             </button>
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
+              className="w-full text-left py-2 px-3 hover:bg-gray-600"
               onClick={handleDoubleClick}
             >
               Rename folder
             </button>
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
+              className="w-full text-left py-2 px-3 hover:bg-gray-600"
               onClick={() => {
                 if (confirm("Are you sure you want to empty this folder?")) {
                   emptyFolder(id);
@@ -138,7 +138,7 @@ export default function SideFolderComponent({
               Empty folder
             </button>
             <button
-              className="w-full text-left py-2 px-3 rounded-sm hover:bg-gray-800"
+              className="w-full text-left py-2 px-3 hover:bg-gray-600"
               onClick={() => {
                 if (confirm("Delete this folder permanently?")) {
                   deleteFolder(id);
@@ -152,7 +152,7 @@ export default function SideFolderComponent({
       </AnimatePresence>
 
       <div
-        className="flex w-full items-center justify-between px-3 py-3 hover:bg-blue-800/20 group relative"
+        className="flex w items-center justify-between px-1 py-3 hover:bg-blue-800/20 group relative  w-full min-w-50"
         onDoubleClick={handleDoubleClick}
       >
         <div onClick={() => setShow(!show)} className="cursor-pointer p-1">
@@ -178,7 +178,7 @@ export default function SideFolderComponent({
             onClick={() => setShow(true)}
           >
             <h1
-              className={`text-sm ${
+              className={`text-sm w-fit ${
                 path === name ? "text-gray-100 font-bold" : ""
               }`}
             >
@@ -195,7 +195,7 @@ export default function SideFolderComponent({
 
         <div
           onClick={() => setShowOptions((prev) => !prev)}
-          className="cursor-pointer p-1 hover:bg-gray-700/30 rounded"
+          className="cursor-pointer p-1 hover:bg-gray-700/30 rounded text-xs"
         >
           <CgMoreVertical />
         </div>
@@ -248,9 +248,7 @@ export default function SideFolderComponent({
                       const prName = projectName.trim();
 
                       if (prName.length == 0) {
-                        addProject(id, "untitled project", generateId());
-                        setAddingProject(false);
-                        setShow(true);
+                        return;
                       } else {
                         addProject(id, projectName, generateId());
                         setAddingProject(false);

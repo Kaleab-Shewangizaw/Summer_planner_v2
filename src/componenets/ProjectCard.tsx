@@ -1,16 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { FaTasks, FaCalendarAlt, FaUser, FaFlag } from "react-icons/fa";
+import { FaTasks, FaCalendarAlt, FaFlag } from "react-icons/fa";
 
 import { useState, useRef, useEffect } from "react";
 
 export default function ProjectCard({
-  name,
   project,
 }: {
-  name: string;
-  project: { id: number; name: string; description?: string };
+  project: {
+    title: string;
+    id: number;
+    name: string;
+    description?: string;
+    priority: string;
+    startedAt: Date;
+  };
 }) {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -21,21 +26,14 @@ export default function ProjectCard({
   randomDueDate.setDate(
     randomDueDate.getDate() + Math.floor(Math.random() * 30)
   );
-  const formattedDueDate = randomDueDate.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
+  console.log(project);
 
-  const priorityOptions = ["High", "Medium", "Low"];
-  const randomPriority = priorityOptions[Math.floor(Math.random() * 3)];
   const priorityColor =
-    randomPriority === "High"
+    project.priority === "high"
       ? "text-red-400"
-      : randomPriority === "Medium"
+      : project.priority === "medium"
       ? "text-yellow-400"
       : "text-green-400";
-
-  const teamMembers = Math.floor(Math.random() * 5) + 1;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -66,16 +64,16 @@ export default function ProjectCard({
 
               <Link href={`/tasks/project/${project.id}`}>
                 <h3 className="font-semibold text-blue-400 text-md truncate  hover:underline">
-                  {name}
+                  {project.title}
                 </h3>
               </Link>
               <div className="px-2 py-0.5 rounded-full text-gray-500 border text-xs">
-                <h3>{teamMembers % 2 ? "Team" : "Private"}</h3>
+                <h3>{"Private"}</h3>
               </div>
             </div>
             <div className="flex items-center text-xs gap-2 text-gray-400">
               <FaFlag className={`text-sm ${priorityColor}`} />
-              <span>{randomPriority}</span>
+              <span>{project.priority}</span>
             </div>
           </div>
           {project.description && (
@@ -86,17 +84,10 @@ export default function ProjectCard({
             </p>
           )}
 
-          <div className="mt-auto flex justify-between text-xs text-gray-500">
+          <div className="mt-auto flex justify-end text-xs text-gray-500">
             <div className="flex items-center">
               <FaCalendarAlt className="mr-1.5" />
-              <span>{formattedDueDate}</span>
-            </div>
-
-            <div className="flex items-center">
-              <FaUser className="mr-1.5" />
-              <span>
-                {teamMembers} member{teamMembers !== 1 ? "s" : ""}
-              </span>
+              <span>{"date goes here"}</span>
             </div>
           </div>
         </div>

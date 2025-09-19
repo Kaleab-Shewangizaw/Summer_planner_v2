@@ -14,10 +14,10 @@ export default function tasksLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="h-full  max-h-full w-full  max-w-full flex overflow-auto ">
+    <div className="h-full  max-h-full w-full  max-w-full flex overflow-auto  ">
       <TasksSidebar />
 
-      <div className="flex h-full max-h-full w-full max-w-full overflow-auto flex-col items-center mx-1 ">
+      <div className="flex flex-1 h-full max-h-full w-full max-w-full overflow-auto flex-col items-center mx-1 ">
         <Path />
         {children}
       </div>

@@ -1,31 +1,28 @@
 import { auth } from "@/lib/auth";
-import { Folder, Project as UserProject } from "@/models/user";
+import { Folder, FolderProject } from "@/models/user";
+import { IProject, Project } from "@/models/project";
 import { v4 as uuidv4 } from "uuid";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import dbConnect from "@/lib/mongodb";
 
 interface AddProjectRequest {
-  folderId: string;
   name: string;
   description?: string;
-  columns?: any[];
+  priority: "high" | "medium" | "low";
+  folderName: string;
+  teamId?: string;
 }
 
 export async function POST(req: Request) {
   try {
     const {
-      folderId,
       name,
       description = "",
-      columns = [],
+      folderName,
+      priority,
+      teamId,
     }: AddProjectRequest = await req.json();
-
-    if (!folderId || !name) {
-      return NextResponse.json(
-        { message: "Folder ID and project name are required" },
-        { status: 400 }
-      );
-    }
 
     if (typeof name !== "string" || name.trim().length === 0) {
       return NextResponse.json(
@@ -34,20 +31,22 @@ export async function POST(req: Request) {
       );
     }
 
-    const session = await auth.api.getSession({ headers: headers() });
+    await dbConnect();
+
+    // Get headers once and reuse them
+    const headersList = await headers();
+    const session = await auth.api.getSession({ headers: headersList });
 
     if (!session?.user) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    // Parse existing folders
     const folders: Folder[] =
       typeof session.user.folders === "string"
         ? JSON.parse(session.user.folders)
         : ((session.user.folders || []) as Folder[]);
 
-    // Check if folder exists
-    const folder = folders.find((f) => f.id === folderId);
+    const folder = folders.find((f) => f.name === folderName);
     if (!folder) {
       return NextResponse.json(
         { message: "Folder not found" },
@@ -56,18 +55,22 @@ export async function POST(req: Request) {
     }
 
     // Create new project
-    const newProject: UserProject = {
+    const newProject: IProject = {
       id: uuidv4(),
-      name: name.trim(),
+      title: name.trim(),
       description: description?.toString() || "",
-      columns: columns || [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      owner: session.user.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      startDate: new Date(),
+      priority: priority,
+      team: teamId,
     };
 
-    // Add project to folder's projects array
+    await Project.create(newProject);
+
     const updatedFolders = folders.map((f) =>
-      f.id === folderId
+      f.name === folderName
         ? {
             ...f,
             projects: [...(f.projects || []), newProject],
@@ -75,12 +78,11 @@ export async function POST(req: Request) {
         : f
     );
 
-    // Update user with new folders array
     const updatedUser = await auth.api.updateUser({
       body: {
         folders: updatedFolders,
       },
-      headers: headers(),
+      headers: headersList,
     });
 
     return NextResponse.json(

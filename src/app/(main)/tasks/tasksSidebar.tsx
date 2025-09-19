@@ -37,14 +37,14 @@ export default function TasksSidebar() {
       <AnimatePresence initial={false}>
         {show && (
           <motion.div
-            className="rounded-sm w-80 min-w-fit p-5 px-1 overflow-x-hidden  flex-col  h-full max-h-[100%] hidden md:flex"
+            className="rounded-sm  min-w-fit p-5 px-1 overflow-x-hidden  flex-col  h-full max-h-[100%] hidden md:flex"
             key="content"
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "auto", opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.1, ease: "easeInOut" }}
           >
-            <div className="overflow-auto flex-1 removeScrollBar min-w-fit rounded-sm w-80 ">
+            <div className="overflow-auto flex-1 removeScrollBar min-w-fit rounded-sm w-fit ">
               {folders.length > 0 ? (
                 folders.map((folder) => {
                   return (
